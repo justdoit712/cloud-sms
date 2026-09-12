@@ -1,0 +1,23 @@
+# ===== IDE =====
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# ===== 构建产物 =====
+target/
+dist/
+out/
+node_modules/
+
+# ===== 日志 =====
+*.log
+
+# ===== 本地环境文件 =====
+.env
+.env.local
+.env.*.local
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db
