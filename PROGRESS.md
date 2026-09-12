@@ -40,6 +40,13 @@
 
 ## 三、详细日志（倒序，最新在上）
 
+### 2026-09-12 · 推送到 GitHub 远端（PC：本机 Windows）
+
+- **类型**：仓库发布
+- **内容**：创建远端仓库 `https://github.com/justdoit712/cloud-sms`（public）；`git remote add origin` + `git push -u origin master`（凭据经 Git Credential Manager 浏览器授权，已存 Windows 凭据管理器）
+- **验证**：`git ls-remote origin` 的 HEAD/refs/heads/master 与本地 `96f48b4` 一致；`git status -sb` 无 ahead/behind
+- **commit**：`docs: 记录远端仓库信息`
+
 ### 2026-09-12 · 创建 git 仓库并初始提交（PC：本机 Windows）
 
 - **类型**：仓库初始化
@@ -70,6 +77,7 @@
 
 | 日期 | 决策 | 理由/备注 |
 | --- | --- | --- |
+| 2026-09-12 | 远端仓库：`https://github.com/justdoit712/cloud-sms`（public，默认分支 `master`） | 与旧项目 beacon-cloud 同账号；public 便于文档公开与跨 PC clone |
 | 2026-09-12 | 重构目录：`D:\Code\project\cloud-sms`，前后端分离（backend/ + frontend/） | 用户指定；旧项目 beacon-cloud 保持不动随时对照 |
 | 2026-09-12 | JDK 目标 17（非 21） | 本机只装 JDK 21，用 `--release 17` 编译保证产物 17 兼容；Boot 3.2 与 17 配套最成熟 |
 | 2026-09-12 | 先做技术升级，业务缺陷后处理 | 升级与修缺陷分开，降低每步风险 |
