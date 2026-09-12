@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段一：文档先行** ✅ 完成 → 等待文档审阅 |
-| 代码状态 | 尚未开始（`backend/`、`frontend/` 仅为目录骨架，已随文档入库） |
-| 最近完成 | 2026-09-12：文档体系建成 + git 仓库初始化（初始提交） |
-| 当前阻塞 | 无（等待用户审阅 `docs/learning/00`、`10` 与 `AI代码编写规范.md`） |
-| 下一步 | 用户确认后启动阶段二：建 `backend/` 拷贝基线 → 按 `docs/learning/06` 逐模块重构 |
+| 项目阶段 | **阶段二：代码重构** 🟡 进行中（步骤 0.1 ✅ / 0.2 待做） |
+| 代码状态 | 基线已拷贝：`backend/`（9 模块 + 父 POM，523 文件）、`frontend/`（Vue3 工程）；未做任何修改 |
+| 最近完成 | 2026-09-13：步骤 0.1 基线拷贝完成（robocopy 264 目录/514 文件/0 失败，pom 字节级一致）并推送 GitHub |
+| 当前阻塞 | 无 |
+| 下一步 | 执行 07A 步骤 0.2：父 POM 升级（Boot 3.2.12 + 双 BOM + 9 组件版本收口） |
 
 ## 二、阶段总览
 
@@ -27,7 +27,7 @@
 
 | 步骤 | 模块 | 状态 | 完成日期 | commit |
 | --- | --- | --- | --- | --- |
-| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | ⬜ | | |
+| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | 🟡（0.1 ✅ / 0.2 待做） | 2026-09-13 | ad31930 |
 | 1 | beacon-common | ⬜ | | |
 | 2 | beacon-cache | ⬜ | | |
 | 3 | beacon-search（ES8 重写） | ⬜ | | |
@@ -39,6 +39,17 @@
 | 9 | 全服务联调 + 主链路冒烟 | ⬜ | | |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-13 · 步骤 0.1 基线拷贝完成（PC：本机 Windows）
+
+- **类型**：阶段二启动（07A 步骤 0.1）
+- **内容**：
+  1. `robocopy $OLD → backend/`（/XD .git .idea .vscode node_modules target dist backups xxl-job）：**264 目录 / 514 文件 / 0 失败**（与手册期望一致）
+  2. `robocopy $OLD\Frontend → frontend/`：85 文件 / 0 失败
+  3. 清理 10 个 .gitkeep
+- **偏差记录（已补录 07A）**：旧仓库根含 `Frontend/`，第一步 robocopy 会把它一并拷入 backend/ 与 frontend/ 重复 → 已删除 `backend\Frontend`（结构以 learning/08 为准：前端唯一归宿是 frontend/）
+- **验证**：`fc /b` 确认 backend/pom.xml 与旧项目字节级一致；backend 顶层 = 9 模块 + pom + 旧项目杂项（analysis/docs/README 等，保真基线）
+- **commit**：`ad31930` chore: 基线拷贝（来自 beacon-cloud master c696c0c，未做任何修改）
 
 ### 2026-09-12 · 清理阶段一冗余文档（PC：本机 Windows）
 
