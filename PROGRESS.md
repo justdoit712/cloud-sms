@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段二：代码重构** 🟡 进行中（步骤 0.1 ✅ / 0.2 待做） |
-| 代码状态 | 基线已拷贝：`backend/`（9 模块 + 父 POM，523 文件）、`frontend/`（Vue3 工程）；未做任何修改 |
-| 最近完成 | 2026-09-13：步骤 0.1 基线拷贝完成（robocopy 264 目录/514 文件/0 失败，pom 字节级一致）并推送 GitHub |
+| 项目阶段 | **阶段二：代码重构** 🟡 进行中（步骤 0.1、0.2 ✅ / 0.3 待做） |
+| 代码状态 | 基线已拷贝；父 POM 已升级 Boot 3.2.12 + 双 BOM + 9 组件版本收口（`mvn -N install` 通过，BOM 生效验证 ✅） |
+| 最近完成 | 2026-09-13：步骤 0.2 父 POM 升级完成（Boot 3.2.12 / Cloud 2023.0.3 / Alibaba 2023.0.3.2，版本号 2.0.0-SNAPSHOT） |
 | 当前阻塞 | 无 |
-| 下一步 | 执行 07A 步骤 0.2：父 POM 升级（Boot 3.2.12 + 双 BOM + 9 组件版本收口） |
+| 下一步 | 执行 07A 步骤 0.3：全局机械横切（javax→jakarta 35 处 / JUnit4→5 / pom 版本清理，3 个 commit） |
 
 ## 二、阶段总览
 
@@ -27,7 +27,7 @@
 
 | 步骤 | 模块 | 状态 | 完成日期 | commit |
 | --- | --- | --- | --- | --- |
-| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | 🟡（0.1 ✅ / 0.2 待做） | 2026-09-13 | ad31930 |
+| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | ✅（0.1 ad31930 / 0.2 f57ff3e） | 2026-09-13 | f57ff3e |
 | 1 | beacon-common | ⬜ | | |
 | 2 | beacon-cache | ⬜ | | |
 | 3 | beacon-search（ES8 重写） | ⬜ | | |
@@ -39,6 +39,14 @@
 | 9 | 全服务联调 + 主链路冒烟 | ⬜ | | |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-13 · 步骤 0.2 父 POM 升级完成（PC：本机 Windows）
+
+- **类型**：阶段二（07A 步骤 0.2）
+- **内容**：parent → Boot 3.2.12；版本 1.0-SNAPSHOT → 2.0.0-SNAPSHOT；属性改连字符写法（spring-cloud.version=2023.0.3 / spring-cloud-alibaba.version=2023.0.3.2，绕开历史"点号导致 BOM 解析失败"坑）；`maven.compiler.release=17`；netty.version=4.1.138.Final 属性覆盖 Boot 管理；dependencyManagement 新增 8 个三方组件（hutool-dfa/es-java/xxl-job/sa-token×2/mybatis/druid-boot3/ikanalyzer/kaptcha）
+- **验证**：`mvn -N install` BUILD SUCCESS；effective-pom 实测：openfeign→4.1.3（Cloud BOM）、nacos-discovery→2023.0.3.2（Alibaba BOM）、netty 4.1.138.Final、parent 3.2.12
+- **坑（已补录 07A）**：PowerShell 下 `help:effective-pom` 的 `-Doutput=` 参数未加引号被截断（报 Unknown lifecycle phase ".xml"）→ 加引号解决
+- **commit**：`f57ff3e` refactor(pom): 升级 Boot 3.2.12 / Cloud 2023.0.3 / Alibaba 2023.0.3.2，版本收口
 
 ### 2026-09-13 · 步骤 0.1 基线拷贝完成（PC：本机 Windows）
 
