@@ -1,0 +1,52 @@
+# 服务名称
+spring:
+  application:
+    name: beacon-cache
+  # 多环境
+  profiles:
+    active: dev
+  # nacos注册中心地址
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.88.128:8848
+      # nacos配置中心地址:
+      config:
+        server-addr: 192.168.88.128:8848
+        file-extension: yml
+        # beacon-cache-dev.yml
+
+cache:
+  namespace:
+    enabled: true
+    fullPrefix: 'beacon:dev:beacon-cloud:cz:'
+  security:
+    enabled: true
+    test-api-enabled: false
+    max-time-skew-seconds: 300
+    key-pattern-allow-list:
+      - client_business:*
+      - client_channel:*
+      - client_balance:*
+      - channel:*
+    caller-secrets:
+      beacon-api: cache_api_secret
+      beacon-strategy: cache_strategy_secret
+      beacon-monitor: cache_monitor_secret
+      beacon-webmaster: cache_webmaster_secret
+      beacon-smsgateway: cache_smsgateway_secret
+    caller-permissions:
+      beacon-api:
+        - READ
+      beacon-strategy:
+        - READ
+        - WRITE
+      beacon-monitor:
+        - READ
+        - KEYS
+      beacon-webmaster:
+        - WRITE
+        - KEYS
+      beacon-smsgateway:
+        - READ
+        - WRITE
