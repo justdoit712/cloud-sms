@@ -5,7 +5,7 @@ import com.cz.common.exception.StrategyException;
 import com.cz.common.model.StandardSubmit;
 import com.cz.strategy.filter.StrategyFilterContext;
 import com.rabbitmq.client.Channel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;

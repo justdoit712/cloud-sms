@@ -6,8 +6,8 @@ import com.cz.common.exception.StrategyException;
 import com.cz.common.model.StandardSubmit;
 import com.cz.strategy.client.BeaconCacheClient;
 import com.cz.strategy.util.ErrorSendMsgUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 

@@ -4,9 +4,9 @@ import com.cz.common.cache.meta.CacheDomainRegistry;
 import com.cz.webmaster.mapper.ClientTemplateMapper;
 import com.cz.webmaster.service.CacheSyncService;
 import com.cz.webmaster.support.CacheSyncRuntimeExecutor;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -27,7 +27,7 @@ public class ClientTemplateServiceImplTest {
     private CacheSyncService cacheSyncService;
     private ClientTemplateServiceImpl service;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         clientTemplateMapper = Mockito.mock(ClientTemplateMapper.class);
         cacheSyncService = Mockito.mock(CacheSyncService.class);

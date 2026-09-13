@@ -4,8 +4,8 @@ import com.cz.api.client.CacheFacade;
 import com.cz.common.enums.ExceptionEnums;
 import com.cz.common.exception.ApiException;
 import com.cz.common.model.StandardSubmit;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 

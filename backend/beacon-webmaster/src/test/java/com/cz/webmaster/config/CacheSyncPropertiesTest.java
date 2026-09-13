@@ -1,7 +1,7 @@
 package com.cz.webmaster.config;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
 
 /**

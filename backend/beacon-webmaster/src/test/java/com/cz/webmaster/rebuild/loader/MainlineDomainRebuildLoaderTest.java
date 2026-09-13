@@ -14,8 +14,8 @@ import com.cz.webmaster.mapper.ClientTemplateMapper;
 import com.cz.webmaster.mapper.MobileBlackMapper;
 import com.cz.webmaster.mapper.MobileDirtyWordMapper;
 import com.cz.webmaster.mapper.MobileTransferMapper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 

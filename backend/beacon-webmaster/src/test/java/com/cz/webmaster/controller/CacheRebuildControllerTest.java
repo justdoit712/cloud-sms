@@ -8,9 +8,9 @@ import com.cz.webmaster.service.CacheRebuildService;
 import com.cz.webmaster.service.SmsRoleService;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Collections;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 public class CacheRebuildControllerTest {
 
-    @After
+    @AfterEach
     public void tearDown() {
         ThreadContext.unbindSubject();
     }

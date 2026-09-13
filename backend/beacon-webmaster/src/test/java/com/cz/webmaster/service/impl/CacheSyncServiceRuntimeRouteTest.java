@@ -8,9 +8,9 @@ import com.cz.webmaster.mapper.ClientBusinessMapper;
 import com.cz.webmaster.mapper.ClientChannelMapper;
 import com.cz.webmaster.service.CacheSyncService;
 import com.cz.webmaster.support.CacheSyncRuntimeExecutor;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -32,7 +32,7 @@ public class CacheSyncServiceRuntimeRouteTest {
     private CacheSyncService cacheSyncService;
     private CacheSyncRuntimeExecutor runtimeExecutor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cacheSyncService = Mockito.mock(CacheSyncService.class);
         runtimeExecutor = new CacheSyncRuntimeExecutor();

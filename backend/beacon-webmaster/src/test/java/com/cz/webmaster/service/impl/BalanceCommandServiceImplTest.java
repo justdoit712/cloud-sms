@@ -12,9 +12,9 @@ import com.cz.webmaster.mapper.ClientBalanceMapper;
 import com.cz.webmaster.mapper.ClientBusinessMapper;
 import com.cz.webmaster.service.CacheSyncService;
 import com.cz.webmaster.support.CacheSyncRuntimeExecutor;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -35,7 +35,7 @@ public class BalanceCommandServiceImplTest {
     private CacheSyncRuntimeExecutor runtimeExecutor;
     private BalanceCommandServiceImpl service;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         clientBalanceMapper = Mockito.mock(ClientBalanceMapper.class);
         clientBusinessMapper = Mockito.mock(ClientBusinessMapper.class);

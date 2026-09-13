@@ -1,9 +1,9 @@
 package com.cz.webmaster.support;
 
 import com.cz.webmaster.rebuild.CacheRebuildCoordinationSupport;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -15,7 +15,7 @@ public class CacheSyncRuntimeExecutorTest {
 
     private final CacheSyncRuntimeExecutor executor = new CacheSyncRuntimeExecutor();
 
-    @After
+    @AfterEach
     public void cleanUpTransactionContext() {
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.clearSynchronization();

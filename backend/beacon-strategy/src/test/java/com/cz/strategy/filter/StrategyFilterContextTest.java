@@ -3,7 +3,7 @@ package com.cz.strategy.filter;
 import com.cz.common.constant.CacheKeyConstants;
 import com.cz.common.model.StandardSubmit;
 import com.cz.strategy.client.CacheFacade;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;

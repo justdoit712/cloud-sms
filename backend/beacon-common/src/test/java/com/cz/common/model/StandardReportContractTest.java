@@ -1,8 +1,8 @@
 package com.cz.common.model;
 
 import com.cz.common.util.JsonUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 
 public class StandardReportContractTest {

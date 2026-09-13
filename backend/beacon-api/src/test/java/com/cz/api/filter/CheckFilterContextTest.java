@@ -1,7 +1,7 @@
 package com.cz.api.filter;
 
 import com.cz.common.model.StandardSubmit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -9,7 +9,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -73,7 +73,7 @@ public class CheckFilterContextTest {
             context.check(new StandardSubmit());
             fail("expected IllegalStateException");
         } catch (IllegalStateException ex) {
-            org.junit.Assert.assertTrue(ex.getMessage().contains("unknown check filter: missing"));
+            org.junit.jupiter.api.Assertions.assertTrue(ex.getMessage().contains("unknown check filter: missing"));
         }
 
         verify(apiKey).check(Mockito.any(StandardSubmit.class));

@@ -3,8 +3,8 @@ package com.cz.api.advice;
 import com.cz.api.vo.SmsSendResultVO;
 import com.cz.common.enums.ExceptionEnums;
 import com.cz.common.exception.ApiException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 public class ApiExceptionHandlerTest {

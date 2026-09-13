@@ -3,9 +3,9 @@ package com.cz.webmaster.service.impl;
 import com.cz.common.cache.meta.CacheDomainRegistry;
 import com.cz.webmaster.service.CacheSyncService;
 import com.cz.webmaster.support.CacheSyncRuntimeExecutor;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -26,7 +26,7 @@ public class LegacyCrudServiceImplRuntimeSyncTest {
     private CacheSyncService cacheSyncService;
     private LegacyCrudServiceImpl legacyCrudService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cacheSyncService = Mockito.mock(CacheSyncService.class);
         legacyCrudService = new LegacyCrudServiceImpl();

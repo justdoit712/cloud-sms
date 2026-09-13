@@ -4,8 +4,8 @@ import com.cz.common.cache.meta.CacheDomainRegistry;
 import com.cz.webmaster.config.CacheSyncProperties;
 import com.cz.webmaster.dto.CacheRebuildReport;
 import com.cz.webmaster.service.CacheRebuildService;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
 
 import java.util.ArrayList;

@@ -8,8 +8,8 @@ import com.cz.common.cache.policy.CacheDeletePolicy;
 import com.cz.common.cache.policy.CacheRebuildPolicy;
 import com.cz.common.cache.policy.CacheWritePolicy;
 import com.cz.common.constant.CacheKeyConstants;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;

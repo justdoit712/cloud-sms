@@ -1,8 +1,8 @@
 package com.cz.monitor.config;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class XxlJobConfigTest {

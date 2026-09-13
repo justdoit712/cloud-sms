@@ -2,8 +2,8 @@ package com.cz.common.util;
 
 import com.cz.common.enums.ExceptionEnums;
 import com.cz.common.exception.ApiException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;

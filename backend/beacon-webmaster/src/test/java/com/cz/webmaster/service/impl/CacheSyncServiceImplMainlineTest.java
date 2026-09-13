@@ -10,9 +10,9 @@ import com.cz.webmaster.rebuild.DomainRebuildLoader;
 import com.cz.webmaster.rebuild.DomainRebuildLoaderRegistry;
 import com.cz.webmaster.support.CacheKeyBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.mock.env.MockEnvironment;
@@ -40,7 +40,7 @@ public class CacheSyncServiceImplMainlineTest {
     private CacheSyncServiceImpl cacheSyncService;
     private CacheRebuildCoordinationSupport cacheRebuildCoordinationSupport;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cacheWriteClient = Mockito.mock(BeaconCacheWriteClient.class);
         cacheRebuildCoordinationSupport = Mockito.mock(CacheRebuildCoordinationSupport.class);

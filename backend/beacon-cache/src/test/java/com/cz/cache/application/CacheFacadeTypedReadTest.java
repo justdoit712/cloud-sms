@@ -5,9 +5,9 @@ import com.cz.cache.redis.NamespaceKeyResolver;
 import com.cz.cache.redis.RedisScanService;
 import com.cz.cache.security.CacheNamespaceProperties;
 import com.cz.cache.security.CacheSecurityProperties;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,7 +29,7 @@ public class CacheFacadeTypedReadTest {
     private LocalRedisClient redisClient;
     private CacheFacade cacheFacade;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         redisClient = mock(LocalRedisClient.class);
         @SuppressWarnings("unchecked")
