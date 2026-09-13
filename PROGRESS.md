@@ -41,6 +41,23 @@
 | R9 | beacon-webmaster（重写：Sa-Token 后台） | ⬜ | | |
 | R10 | frontend（重写：Vue3 + TS 前端） | ⬜ | | |
 
+#### R1 执行拆分（2026-09-13 定：用户要求小步学习——每步 2~4 个文件 + 一个学习点 + 一个 commit，全绿后进 R2）
+
+| 步 | 文件 | 学习点 |
+| --- | --- | --- |
+| 1 | pom.xml + 包目录 + 父 POM 挂载 | Maven 多模块 / 父 POM 版本治理 |
+| 2 | StandardSubmit | 可变 @Data vs record 的取舍（链式逐字段装配） |
+| 3 | StandardReport | 回执/回调双支路共用载体 |
+| 4 | RabbitMQConstants | MQ 拓扑语义（topic 实为队列、两条延迟链） |
+| 5 | CacheKeyConstants + SmsConstant | 逻辑/物理缓存键、回执状态码 |
+| 6 | ExceptionEnums + 单测 | 错误码表设计（-100 撞码教训） |
+| 7 | MobileOperatorEnum + CMPP2 两枚映射枚举 | 枚举映射与 Optional 反查 |
+| 8 | BizException + 4 子类 | 异常上下文体系（ack/nack 分类依据） |
+| 9 | SnowFlake + 单测 | 雪花 ID 位运算、时钟回拨 fail-fast |
+| 10 | PhoneFormatCheckUtil + Result/ResultVO/PageResultVO | record 返回体、集合禁 null |
+| 11 | CacheAuthSignUtil + CacheAuthHeaders + 单测 | HMAC payload 设计、恒时比较 |
+| 12 | 缓存契约 7 文件 + 单测 | record + Map.ofEntries 不可变注册表 |
+
 ## 三、详细日志（倒序，最新在上）
 
 ### 2026-09-13 · 回退 R1 + 补齐三份缺口文档（PC：本机 Windows）
