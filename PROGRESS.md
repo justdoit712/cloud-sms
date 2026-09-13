@@ -60,6 +60,13 @@
 
 ## 三、详细日志（倒序，最新在上）
 
+### 2026-09-13 · 本机会话收尾，交接新 PC（PC：本机 Windows）
+
+- **类型**：会话收尾
+- **内容**：文档体系全部齐备并已推送 GitHub（`origin/master` = `b02a29b`）；代码未动（R1 待用户指令，计划已拆 12 步登记在案）；环境登记表更新（本机另装有 jdk-17 可选）
+- **下机指引**：新 PC `git clone https://github.com/justdoit712/cloud-sms` → 先读 PROGRESS（一、当前状态）→ `docs/learning/09`（执行蓝图）→ 按 R1 十二步表逐步执行；旧项目源码仅本机有（`D:\Code\Java\springcloud\beacon-cloud`），如新机需对照可从 GitHub clone beacon-cloud 旧仓库
+- **commit**：`docs: 会话收尾交接（环境登记更新 + 下机指引）`
+
 ### 2026-09-13 · 回退 R1 + 补齐三份缺口文档（PC：本机 Windows）
 
 - **类型**：过程纠正 + 文档补齐
@@ -202,5 +209,5 @@
 
 | 机器 | 系统 | JDK | Maven | 备注 |
 | --- | --- | --- | --- | --- |
-| 本机 | Windows 11 | 21.0.9（JAVA_HOME=D:\Dev_Envs\Java\jdk-21） | 3.6.3 | 无 JDK 17，用 --release 17 |
+| 本机 | Windows 11 | 21.0.9（JAVA_HOME=D:\Dev_Envs\Java\jdk-21）；另有 jdk-17 17.0.9 可选 | 3.6.3 | 用 --release 17 编译；本地仓库 D:\App\MAVEN\maven-repository |
 | （待填） | | | | |
