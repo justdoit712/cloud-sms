@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段二：代码重构** 🟡 进行中（阶段 A 完成 ✅：0.1/0.2/0.3） |
-| 代码状态 | 基线已拷贝；父 POM 升级完成；全局横切完成（javax→jakarta 19 文件、JUnit5 50 文件、9 个模块 pom 清理，common 编译通过） |
-| 最近完成 | 2026-09-13：步骤 0.3 全局机械横切完成（3 个 commit，`mvn -pl beacon-common -am compile` 通过） |
+| 项目阶段 | **阶段二：代码重构（从零重写路线）** 🟡 准备中（旧代码已清仓，待制定重写方案） |
+| 代码状态 | backend/ 仅剩父 POM（2.0.0，Boot 3.2.12 + 双 BOM + 版本收口）+ 9 个空模块骨架；frontend/ 已清空 |
+| 最近完成 | 2026-09-13：路线改弦——废弃迁移式，确定从零重写；仓库已清理回空骨架 |
 | 当前阻塞 | 无 |
-| 下一步 | 执行 07B 步骤 1.1：beacon-common（移除 jsr310 手工注解 + 测试迁移，`mvn -pl beacon-common -am install` 全绿） |
+| 下一步 | 制定重写方案（模块拆分/接口契约/顺序）→ 从 beacon-common 开始重写 |
 
 ## 二、阶段总览
 
@@ -23,22 +23,33 @@
 | 二 | 代码重构：JDK17 + Boot 3.2 + 组件升级（9 模块，按 `docs/learning/06` 执行） | ⏳ 未开始 |
 | 三 | 业务缺陷修复：`docs/02_项目详细分析总报告.md` 38 项风险，按优先级 | ⏳ 未开始 |
 
-### 阶段二 · 模块进度（代码阶段启动后维护）
+### 阶段二 · 模块进度（从零重写路线，2026-09-13 起）
+
+> 旧"迁移式"步骤表作废（0.1/0.2 产物保留：父 POM 直接复用；旧代码已清仓）。重写顺序与契约以新方案文档为准。
 
 | 步骤 | 模块 | 状态 | 完成日期 | commit |
 | --- | --- | --- | --- | --- |
-| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | ✅（0.1 ad31930 / 0.2 f57ff3e / 0.3 3321a4d+314a977+aa91e4d） | 2026-09-13 | aa91e4d |
-| 1 | beacon-common | ⬜ | | |
-| 2 | beacon-cache | ⬜ | | |
-| 3 | beacon-search（ES8 重写） | ⬜ | | |
-| 4 | beacon-api / beacon-strategy / beacon-push | ⬜ | | |
-| 5 | beacon-smsgateway（Netty + 线程池替换 + 参数外置） | ⬜ | | |
-| 6 | beacon-monitor（xxl-job 2.4） | ⬜ | | |
-| 7 | beacon-webmaster（Sa-Token + 纯 REST） | ⬜ | | |
-| 8 | 前端迁移（frontend/，Header 改 satoken 等） | ⬜ | | |
-| 9 | 全服务联调 + 主链路冒烟 | ⬜ | | |
+| R0 | 清仓：删除迁移式拷贝的旧代码，保留父 POM + 空骨架 | ✅ | 2026-09-13 | 待提交 |
+| R1 | beacon-common（重写：模型/常量/异常/工具/缓存契约） | ⬜ | | |
+| R2 | beacon-cache（重写：统一 Redis HTTP 服务） | ⬜ | | |
+| R3 | beacon-search（全新 ES8 客户端实现） | ⬜ | | |
+| R4 | beacon-api（重写：接入 + 校验链） | ⬜ | | |
+| R5 | beacon-strategy（重写：策略链） | ⬜ | | |
+| R6 | beacon-push（重写：回调推送） | ⬜ | | |
+| R7 | beacon-smsgateway（重写：CMPP/Netty 网关） | ⬜ | | |
+| R8 | beacon-monitor（重写：xxl-job 巡检） | ⬜ | | |
+| R9 | beacon-webmaster（重写：Sa-Token 后台） | ⬜ | | |
+| R10 | frontend（重写：Vue3 + TS 前端） | ⬜ | | |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-13 · 路线改弦：从零重写，清仓旧代码（PC：本机 Windows）
+
+- **类型**：重大决策变更
+- **内容**：用户明确"所有代码全部重写"。删除迁移式拷贝的旧代码（backend 514 文件 + frontend 85 文件），仅保留：父 POM（Boot 3.2.12 + 双 BOM + 版本收口，0.2 成果直接复用）、9 个空模块骨架、frontend 空目录
+- **参考资源保留**：旧项目原版 `D:\Code\Java\springcloud\beacon-cloud`（未动）；git 历史 `ad31930` 基线 commit（可 `git show`/checkout 恢复）；docs/02、03 与 analysis/ 四篇深挖报告 = 重写时的"规格说明书"
+- **作废标记**：learning/06、07A~07F 为迁移式执行手册，历史留存不再执行；learning/01~05 组件笔记、AI代码编写规范.md 继续生效
+- **commit**：`chore: 清仓迁移式旧代码，转入从零重写`
 
 ### 2026-09-13 · 步骤 0.3 全局机械横切完成（PC：本机 Windows）
 
@@ -118,7 +129,7 @@
 
 | 日期 | 决策 | 理由/备注 |
 | --- | --- | --- |
-| 2026-09-12 | 远端仓库：`https://github.com/justdoit712/cloud-sms`（public，默认分支 `master`） | 与旧项目 beacon-cloud 同账号；public 便于文档公开与跨 PC clone |
+| 2026-09-13 | **路线改为"从零重写"（推翻迁移式）**：后端 9 模块 + 前端全部重新编写，旧项目仅作对照参考（原版仍在 `D:\Code\Java\springcloud\beacon-cloud` 不动） | 用户明确："所有代码全部重写"；已拷贝基线保留于 git 历史（ad31930），learning/06、07A~07F 迁移手册作废（历史留存）；learning/01~05 组件笔记与 AI 编写规范继续生效 |
 | 2026-09-12 | 重构目录：`D:\Code\project\cloud-sms`，前后端分离（backend/ + frontend/） | 用户指定；旧项目 beacon-cloud 保持不动随时对照 |
 | 2026-09-12 | JDK 目标 17（非 21） | 本机只装 JDK 21，用 `--release 17` 编译保证产物 17 兼容；Boot 3.2 与 17 配套最成熟 |
 | 2026-09-12 | 先做技术升级，业务缺陷后处理 | 升级与修缺陷分开，降低每步风险 |

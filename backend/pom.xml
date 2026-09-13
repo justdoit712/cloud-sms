@@ -17,15 +17,8 @@
     <name>cloud-sms-backend</name>
 
     <modules>
-        <module>beacon-api</module>
-        <module>beacon-common</module>
-        <module>beacon-cache</module>
-        <module>beacon-strategy</module>
-        <module>beacon-search</module>
-        <module>beacon-push</module>
-        <module>beacon-smsgateway</module>
-        <module>beacon-monitor</module>
-        <module>beacon-webmaster</module>
+        <!-- 从零重写路线：模块随重写进度逐个加回（R1 common → R2 cache → R3 search → R4 api → R5 strategy
+             → R6 push → R7 smsgateway → R8 monitor → R9 webmaster） -->
     </modules>
 
     <properties>
