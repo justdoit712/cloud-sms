@@ -29,10 +29,8 @@ cloud-sms\
 5. `docs/learning/03_ES8新JavaClient与search改造.md` —— ES 客户端重写（逐方法映射）
 6. `docs/learning/04_Netty升级与CMPP网关改造.md` —— 网关升级与线程池方案
 7. `docs/learning/05_xxljob24与监控模块升级.md` —— 监控模块升级
-8. `docs/learning/06_逐模块重构方案.md` —— 代码阶段执行蓝图：9 模块 × 改点/风险/验收
-9. `docs/learning/07_索引与总览.md` —— ❌ 已作废（迁移式路线手册，历史留存）
-10. `docs/learning/08_前后端架构与目录结构.md` —— **★ 结构冻结**：backend/frontend 目录、模块调用关系、新文件归属规则
-11. `docs/learning/09_从零重写方案.md` —— **★★ 重写路线执行蓝图（现行）**：模块顺序、逐模块设计要点、38 项缺陷规避清单
+8. `docs/learning/08_前后端架构与目录结构.md` —— **★ 结构冻结**：backend/frontend 目录、模块调用关系、新文件归属规则
+9. `docs/learning/09_从零重写方案.md` —— **★★ 重写路线执行蓝图（现行）**：模块顺序、逐模块设计要点、38 项缺陷规避清单
 
 ## 阶段
 
