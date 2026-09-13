@@ -6,14 +6,12 @@
     <parent>
         <groupId>com.cz</groupId>
         <artifactId>beacon-cloud</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>beacon-monitor</artifactId>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -37,15 +35,14 @@
         <dependency>
             <groupId>com.cz</groupId>
             <artifactId>beacon-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <!--        xxl-job的依赖-->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-            <version>2.3.1</version>
-        </dependency>
+                    </dependency>
 
         <!--        RabbitMQ依赖-->
         <dependency>

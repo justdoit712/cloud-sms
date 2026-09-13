@@ -6,41 +6,42 @@
     <parent>
         <groupId>com.cz</groupId>
         <artifactId>beacon-cloud</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>beacon-webmaster</artifactId>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--        4.1 步随 Shiro 一起删除，暂保留版本 -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring-boot-web-starter</artifactId>
             <version>1.4.0</version>
         </dependency>
-
+        <!--        4.1 步替换为 com.mysql:mysql-connector-j，暂保留版本 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.49</version>
         </dependency>
+        <!--        4.1 步替换为 druid-spring-boot-3-starter，暂保留版本 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.2.28</version>
         </dependency>
+        <!--        版本由父 POM 管理（3.0.5） -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -50,16 +51,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
+        <!--        版本由父 POM 管理（0.0.9） -->
         <dependency>
             <groupId>com.github.axet</groupId>
             <artifactId>kaptcha</artifactId>
-            <version>0.0.9</version>
         </dependency>
         <!--        公共组件，common-->
         <dependency>
             <groupId>com.cz</groupId>
             <artifactId>beacon-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
         <!--        SpringMVC的参数校验。-->
         <dependency>
@@ -76,14 +77,13 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!--        导入hutool工具类-->
+        <!--        导入hutool工具类（版本由父 POM 管理 5.8.47）-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-dfa</artifactId>
-            <version>5.8.12</version>
         </dependency>
 
-        <!-- JWT -->
+        <!-- JWT（4.1 步随 Shiro 一起删除，暂保留版本） -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
