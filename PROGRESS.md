@@ -29,7 +29,7 @@
 
 | 步骤 | 模块 | 状态 | 完成日期 | commit |
 | --- | --- | --- | --- | --- |
-| R0 | 清仓：删除迁移式拷贝的旧代码，保留父 POM + 空骨架 | ✅ | 2026-09-13 | f061857 |
+| R0 | 清仓：删除迁移式拷贝的旧代码，保留父 POM + 空骨架 | ✅ | 2026-09-13 | 9dd0044 |
 | R1 | beacon-common（重写：模型/常量/异常/工具/缓存契约） | ⬜ | | |
 | R2 | beacon-cache（重写：统一 Redis HTTP 服务） | ⬜ | | |
 | R3 | beacon-search（全新 ES8 客户端实现） | ⬜ | | |
@@ -59,6 +59,13 @@
 | 12 | 缓存契约 7 文件 + 单测 | record + Map.ofEntries 不可变注册表 |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-13 · 提交历史重写：msg 统一去掉括号（PC：本机 Windows）
+
+- **类型**：git 历史整理
+- **内容**：17 条 commit msg 重写——删除英文范围括号 `(pom)/(all)/(test)` 与中文说明括号，括号内文字保留（逗号衔接）；`git filter-branch --msg-filter` 全量重写 + `git push --force`；新约定「类型: 描述」不带括号，AI 规范 §5.5 与 09 §2 已同步
+- **旧 hash 对照**：基线拷贝 `ad31930`→`5edb39d`、清仓 `f061857`→`9dd0044`（台账引用已全部更新；其余旧 hash 作废，历史叙述条目保留原样）
+- **commit**：重写本身无独立 commit；台账同步提交见下一条
 
 ### 2026-09-13 · 本机会话收尾，交接新 PC（PC：本机 Windows）
 
@@ -97,7 +104,7 @@
 
 - **类型**：重大决策变更
 - **内容**：用户明确"所有代码全部重写"。删除迁移式拷贝的旧代码（backend 514 文件 + frontend 85 文件），仅保留：父 POM（Boot 3.2.12 + 双 BOM + 版本收口，0.2 成果直接复用）、9 个空模块骨架、frontend 空目录
-- **参考资源保留**：旧项目原版 `D:\Code\Java\springcloud\beacon-cloud`（未动）；git 历史 `ad31930` 基线 commit（可 `git show`/checkout 恢复）；docs/02、03 与 analysis/ 四篇深挖报告 = 重写时的"规格说明书"
+- **参考资源保留**：旧项目原版 `D:\Code\Java\springcloud\beacon-cloud`（未动）；git 历史 `5edb39d` 基线 commit（可 `git show`/checkout 恢复）；docs/02、03 与 analysis/ 四篇深挖报告 = 重写时的"规格说明书"
 - **作废标记**：learning/06、07A~07F 为迁移式执行手册，历史留存不再执行；learning/01~05 组件笔记、AI代码编写规范.md 继续生效
 - **commit**：`chore: 清仓迁移式旧代码，转入从零重写`
 
@@ -133,7 +140,7 @@
   3. 清理 10 个 .gitkeep
 - **偏差记录（已补录 07A）**：旧仓库根含 `Frontend/`，第一步 robocopy 会把它一并拷入 backend/ 与 frontend/ 重复 → 已删除 `backend\Frontend`（结构以 learning/08 为准：前端唯一归宿是 frontend/）
 - **验证**：`fc /b` 确认 backend/pom.xml 与旧项目字节级一致；backend 顶层 = 9 模块 + pom + 旧项目杂项（analysis/docs/README 等，保真基线）
-- **commit**：`ad31930` chore: 基线拷贝（来自 beacon-cloud master c696c0c，未做任何修改）
+- **commit**：`5edb39d` chore: 基线拷贝，来自 beacon-cloud master c696c0c，未做任何修改
 
 ### 2026-09-12 · 清理阶段一冗余文档（PC：本机 Windows）
 
@@ -180,8 +187,9 @@
 | 日期 | 决策 | 理由/备注 |
 | --- | --- | --- |
 | 2026-09-13 | **代码须经用户明确指令才动工**（R1 抢跑已回退） | 用户要求：先补齐全部文档、一步一步搭建；文档未齐/未确认前不动代码 |
+| 2026-09-13 | **commit msg 约定：`类型: 描述`，不带任何括号**（历史已全量重写 + force push） | 用户要求；AI 规范 §5.5、09 §2 已同步 |
 | 2026-09-13 | 中间件版本修正：MySQL 按旧库实测 **9.1.0**（原 09 方案写 8.0） | 旧库 dump 证据（backups/mysql/user_role_permission_seed_20260519）；DDL 文档已收录待核对项 |
-| 2026-09-13 | **路线改为"从零重写"（推翻迁移式）**：后端 9 模块 + 前端全部重新编写，旧项目仅作对照参考（原版仍在 `D:\Code\Java\springcloud\beacon-cloud` 不动） | 用户明确："所有代码全部重写"；已拷贝基线保留于 git 历史（ad31930），learning/06、07A~07F 迁移手册作废（历史留存）；learning/01~05 组件笔记与 AI 编写规范继续生效 |
+| 2026-09-13 | **路线改为"从零重写"（推翻迁移式）**：后端 9 模块 + 前端全部重新编写，旧项目仅作对照参考（原版仍在 `D:\Code\Java\springcloud\beacon-cloud` 不动） | 用户明确："所有代码全部重写"；已拷贝基线保留于 git 历史（5edb39d），learning/06、07A~07F 迁移手册作废（历史留存）；learning/01~05 组件笔记与 AI 编写规范继续生效 |
 | 2026-09-12 | 重构目录：`D:\Code\project\cloud-sms`，前后端分离（backend/ + frontend/） | 用户指定；旧项目 beacon-cloud 保持不动随时对照 |
 | 2026-09-12 | JDK 目标 17（非 21） | 本机只装 JDK 21，用 `--release 17` 编译保证产物 17 兼容；Boot 3.2 与 17 配套最成熟 |
 | 2026-09-12 | 先做技术升级，业务缺陷后处理 | 升级与修缺陷分开，降低每步风险 |

@@ -141,7 +141,7 @@ com.cz.{module}
 2. **编译验证**：每完成一个模块执行 `mvn -pl <模块> -am install -DskipTests`（PowerShell 下参数用引号包裹），编译不过不进入下一模块。
 3. **测试迁移**：该模块旧测试同步迁 JUnit 5（`org.junit.jupiter.api.*`）；新增代码**必须带对应单测**（纯 POJO/record 可豁免）。
 4. **版本纪律**：新增依赖版本一律在父 POM `dependencyManagement` 声明，子模块不写版本号；引入前先在 Maven Central 验证存在性。
-5. **提交纪律**：一个模块一个 commit，message 格式 `refactor(模块): 描述`；不混入无关文件。
+5. **提交纪律**：一个模块一个 commit，message 格式 `类型: 描述`（feat/docs/chore/refactor，**不使用括号**）；不混入无关文件。
 6. **对照学习**：每落一个 JDK 17 特性，在 `docs/learning/` 对应笔记末尾补一行实战记录（特性名 + 文件 + 一句话心得）——服务于"边重构边学习"目标。
 7. **禁止行为清单**：
    - 禁止删除/改写不在任务范围的代码（含"死代码"，除非任务明确要求）
