@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段二：代码重构** 🟡 进行中（步骤 0.1、0.2 ✅ / 0.3 待做） |
-| 代码状态 | 基线已拷贝；父 POM 已升级 Boot 3.2.12 + 双 BOM + 9 组件版本收口（`mvn -N install` 通过，BOM 生效验证 ✅） |
-| 最近完成 | 2026-09-13：步骤 0.2 父 POM 升级完成（Boot 3.2.12 / Cloud 2023.0.3 / Alibaba 2023.0.3.2，版本号 2.0.0-SNAPSHOT） |
+| 项目阶段 | **阶段二：代码重构** 🟡 进行中（阶段 A 完成 ✅：0.1/0.2/0.3） |
+| 代码状态 | 基线已拷贝；父 POM 升级完成；全局横切完成（javax→jakarta 19 文件、JUnit5 50 文件、9 个模块 pom 清理，common 编译通过） |
+| 最近完成 | 2026-09-13：步骤 0.3 全局机械横切完成（3 个 commit，`mvn -pl beacon-common -am compile` 通过） |
 | 当前阻塞 | 无 |
-| 下一步 | 执行 07A 步骤 0.3：全局机械横切（javax→jakarta 35 处 / JUnit4→5 / pom 版本清理，3 个 commit） |
+| 下一步 | 执行 07B 步骤 1.1：beacon-common（移除 jsr310 手工注解 + 测试迁移，`mvn -pl beacon-common -am install` 全绿） |
 
 ## 二、阶段总览
 
@@ -27,7 +27,7 @@
 
 | 步骤 | 模块 | 状态 | 完成日期 | commit |
 | --- | --- | --- | --- | --- |
-| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | ✅（0.1 ad31930 / 0.2 f57ff3e） | 2026-09-13 | f57ff3e |
+| 0 | 建 backend/ + 拷贝基线 + 父 POM 升级 | ✅（0.1 ad31930 / 0.2 f57ff3e / 0.3 3321a4d+314a977+aa91e4d） | 2026-09-13 | aa91e4d |
 | 1 | beacon-common | ⬜ | | |
 | 2 | beacon-cache | ⬜ | | |
 | 3 | beacon-search（ES8 重写） | ⬜ | | |
@@ -39,6 +39,21 @@
 | 9 | 全服务联调 + 主链路冒烟 | ⬜ | | |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-13 · 步骤 0.3 全局机械横切完成（PC：本机 Windows）
+
+- **类型**：阶段二（07A 步骤 0.3，3 个 commit）
+- **内容**：
+  1. `3321a4d` refactor(all): javax→jakarta 换名——19 文件 28 行（annotation/servlet/validation 三类；javax.mail/crypto/imageio 保留 ✅）
+  2. `314a977` refactor(test): JUnit4→JUnit5——50 文件 132 行（@RunWith(SpringRunner)→@ExtendWith(SpringExtension) ×5、@Before/@After→Each、Assert→Assertions）
+  3. `aa91e4d` refactor(pom): 子模块版本清理+版本号 2.0.0-SNAPSHOT——9 模块 pom：父引用/common 依赖版本升级、删 compiler source/target 1.8（与父 POM release=17 冲突）、删已被管理的写死版本
+- **验证**：grep `1.0-SNAPSHOT`/`maven.compiler.source`/`org.junit.(非jupiter)`/`@RunWith` 全部归零；`mvn -pl beacon-common -am compile` BUILD SUCCESS（Boot 3.2.12 + release 17 首次编译通过）
+- **执行偏差（已补录 07A）**：
+  1. ⚠️ 手册批次 3 未区分"已被父 POM/Boot 管理"的依赖——hippo4j 1.5.0、mysql 5.1.49、druid boot2 1.2.28、ES 7.6.2×2 无管理版本，删掉版本会令整个 reactor 无法解析 → **保留版本到对应模块步骤**（3.1/4.1/2.1 随依赖删除/替换）
+  2. mockito-inline 在 Boot 3.2 无管理版本 → 提前到 0.3 删除（手册原定 2.1；Mockito 5 已内置 inline，零影响）
+  3. 额外清理：commons-lang3（Boot 管理）、kaptcha/webmaster hutool-dfa（父 POM 管理）版本一并删除；模块 pom 的 maven.compiler.source/target 1.8 一并删除
+  4. 过程事故：PowerShell `[regex]::Replace` 四参重载不存在导致 6 个 pom 被写成空文件 → `git checkout` 恢复后改用实例方法 count 重载 + 空内容护栏重做，结果验证无误
+- **commit**：见上 3 个
 
 ### 2026-09-13 · 步骤 0.2 父 POM 升级完成（PC：本机 Windows）
 
