@@ -14,7 +14,10 @@ cloud-sms\
 ├── docs\            # 文档体系
 │   ├── 02、03               # 原项目设计/分析文档（保留总报告与架构指南）
 │   ├── analysis\                 # 旧项目四大模块深挖报告
-│   └── learning\                 # 重构学习笔记与执行蓝图（见下）
+│   ├── learning\                 # 重构学习笔记与执行蓝图（见下）
+│   ├── db\                       # 数据库表结构 DDL（重写 webmaster 对照）
+│   ├── protocol\                 # CMPP 2.0 报文规格（网关重写用）
+│   └── ops\                      # Nacos 配置清单（各服务配置项登记）
 ├── backend\         # 已建（9 个 beacon-* 空模块骨架，待步骤 0.1 拷贝基线）
 └── frontend\        # 已建（空目录，待步骤 0.1 拷贝旧 Frontend）
 ```
@@ -31,6 +34,9 @@ cloud-sms\
 7. `docs/learning/05_xxljob24与监控模块升级.md` —— 监控模块升级
 8. `docs/learning/08_前后端架构与目录结构.md` —— **★ 结构冻结**：backend/frontend 目录、模块调用关系、新文件归属规则
 9. `docs/learning/09_从零重写方案.md` —— **★★ 重写路线执行蓝图（现行）**：模块顺序、逐模块设计要点、38 项缺陷规避清单
+10. `docs/db/01_数据库表结构DDL.md` —— 18 张表 DDL（重写 beacon-webmaster 前对照）
+11. `docs/protocol/01_CMPP2报文规格.md` —— CMPP 2.0 报文规范 + P1~P25 缺陷规避（重写 beacon-smsgateway 前必读）
+12. `docs/ops/01_Nacos配置清单.md` —— 各服务配置项登记表（新增配置必须在此登记）
 
 ## 阶段
 
