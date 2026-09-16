@@ -21,3 +21,6 @@ node_modules/
 # ===== 系统文件 =====
 .DS_Store
 Thumbs.db
+
+# ===== 旧代码对照物（git worktree，来自基线 5edb39d，不入库）=====
+_reference/

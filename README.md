@@ -35,6 +35,7 @@ cloud-sms\
 7. `docs/learning/05_xxljob24与监控模块升级.md` —— 监控模块升级
 8. `docs/learning/08_前后端架构与目录结构.md` —— **★ 结构冻结**：backend/frontend 目录、模块调用关系、新文件归属规则
 9. `docs/learning/09_从零重写方案.md` —— **★★ 重写路线执行蓝图（现行）**：模块顺序、逐模块设计要点、38 项缺陷规避清单
+9.5 `docs/learning/10_阶段一执行手册.md` —— **★ 阶段一逐步执行手册（现行）**：20 个工作项、每步交付物/学习点/验收命令/commit、中间件最晚到位时点、风险清单
 10. `docs/db/01_数据库表结构DDL.md` —— 18 张表 DDL（重写 beacon-webmaster 前对照）
 11. `docs/protocol/01_CMPP2报文规格.md` —— CMPP 2.0 报文规范 + P1~P25 缺陷规避（重写 beacon-smsgateway 前必读）
 12. `docs/ops/01_Nacos配置清单.md` —— 各服务配置项登记表（新增配置必须在此登记）
