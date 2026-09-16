@@ -41,36 +41,42 @@
 
 **第 0 步 · 场景一前置（不写业务代码）**
 
-> **★ 逐步细节以 `docs/learning/10_阶段一执行手册.md` 为准**（20 个工作项：第 0 步 4 个前置 + 第 1~15 步实现；每步含交付物/学习点/验收命令/commit message）。
+> **★ 逐步细节以 `docs/learning/10_阶段一执行手册.md` 为准**（24 个工作项 = 第 0 步 4 个前置 + 第 1~19 步实现；每步含交付物/学习点/验收命令/commit message）。
+> **★ 2026-09-16 调整：CMPP 后置。** 阶段一拆两段验收：**验收点 A = 接口闭环**（第 12~15 步，Postman/curl 实测，只需 Nacos+RabbitMQ，sm gateway 先用 stub 只打日志）→ **验收点 B = CMPP 真下发**（第 16~19 步，需模拟器 + Netty）。CMPP 模拟器缺失**不再阻塞前 15 步**。
 
 | 步 | 事项 | 学习点 |
 | --- | --- | --- |
 | 0-a | 装并启 Nacos 2.3.x，按 `docs/ops/01` 建 DataId | 注册中心 + 配置中心的数据模型 |
 | 0-b | 装 RabbitMQ 3.12+ 并启用 `rabbitmq_delayed_message_exchange` | 延迟交换机为何要插件 |
-| 0-c | 启 Redis 7.4.9；准备 CMPP 模拟器（127.0.0.1:7890） | 模拟器与被测网关的方向关系 |
+| 0-c | 启 Redis 7.4.9；**CMPP 模拟器延后到第 16 步前** | 模拟器与被测网关的方向关系 |
 | 0-d | ✅ **已完成** 从 git 基线 `5edb39d` 导出旧代码作对照物（`_reference/`，374 Java / 9 模块，已 gitignore） | git worktree 取历史物 |
 
-**第 1~N 步 · 场景一实现（拉开即最小闭环）**
+**第 1~19 步 · 场景一实现（拉开即最小闭环）**
 
-| 步 | 文件 | 学习点 |
-| --- | --- | --- |
-| 1 | 父 POM 挂 9 模块 + 各模块 pom + 启动类骨架 | Maven 多模块 / 父 POM 版本治理 |
-| 2 | StandardSubmit | 可变 @Data vs record 的取舍（链式逐字段装配） |
-| 3 | StandardReport | 回执/回调双支路共用载体 |
-| 4 | RabbitMQConstants | MQ 拓扑语义（topic 实为队列、两条延迟链） |
-| 5 | CacheKeyConstants + SmsConstant | 逻辑/物理缓存键、回执状态码 |
-| 6 | ExceptionEnums + 单测 | 错误码表设计（-100 撞码教训） |
-| 7 | MobileOperatorEnum + CMPP2 两枚映射枚举 | 枚举映射与 Optional 反查 |
-| 8 | BizException + 4 子类 | 异常上下文体系（ack/nack 分类依据） |
-| 9 | SnowFlake + 单测 | 雪花 ID 位运算、时钟回拨 fail-fast |
-| 10 | PhoneFormatCheckUtil + Result/ResultVO/PageResultVO | record 返回体、集合禁 null |
-| 11 | CacheAuthSignUtil + CacheAuthHeaders + 单测 | HMAC payload 设计、恒时比较、**签名覆盖 body（规避 🟡#23）** |
-| 12 | ApiStarterApp + SmsController + CheckFilter 链（先 3 段） | 校验链与过滤器上下文 |
-| 13 | strategy 消费 + 策略链（先 route/phase 两段） | MQ 手动 ack 与异常分类 |
-| 14 | smsgateway CMPP 连接 + Submit 编解码 | Netty pipeline 与 CMPP 报文 |
-| 15 | 端到端打通 + 模拟器验收 | 全链路串起来 |
+| 步 | 文件 / 事项 | 学习点 | 段 |
+| --- | --- | --- | --- |
+| 1 | 父 POM 挂 common+cache（其余注释）+ 各模块 pom + 启动类骨架 | Maven 多模块 / 父 POM 版本治理 | A |
+| 2 | StandardSubmit | 可变 @Data vs record 的取舍（链式逐字段装配） | A |
+| 3 | StandardReport | 回执/回调双支路共用载体 | A |
+| 4 | RabbitMQConstants | MQ 拓扑语义（topic 实为队列） | A |
+| 5 | CacheKeyConstants + SmsConstant | 逻辑/物理缓存键、回执状态码 | A |
+| 6 | ExceptionEnums + 单测 | 错误码表设计（-100 撞码教训） | A |
+| 7 | MobileOperatorEnum + CMPP2 两枚映射枚举 | 枚举映射与 Optional 反查 | A |
+| 8 | BizException + 4 子类 | 异常上下文体系（ack/nack 分类依据） | A |
+| 9 | SnowFlake + 单测 | 雪花 ID 位运算、时钟回拨 fail-fast | A |
+| 10 | PhoneFormatCheckUtil + Result/ResultVO/PageResultVO | record 返回体、集合禁 null | A |
+| 11 | CacheAuthSignUtil + CacheAuthHeaders + 单测 | HMAC payload 设计、恒时比较、**签名覆盖 body（规避 🟡#23）** | A |
+| 12 | ApiStarterApp + SmsController + CheckFilter 链（先 3 段） | 校验链与过滤器上下文 | A |
+| 13 | strategy 消费 + 策略链（**先 route 一段**） | MQ 手动 ack 与异常分类 | A |
+| 14 | **smsgateway stub：只消费 + 打印报文摘要（不碰 CMPP）** | 监听容器 ackMode/prefetch/concurrency | A |
+| 15 | **★ 验收点 A：接口闭环（Postman/curl 实测）** | 一次请求穿过五跳；负面验证 | A |
+| 16 | CMPP 协议层：Netty 连接 + 帧解码 + Connect 握手 | Netty pipeline 方向、帧解码器参数 | B |
+| 17 | CMPP 业务层：Submit 编码 / 下发 / SubmitResp | CMPP 定长字段与偏移（P2 错位教训） | B |
+| 18 | 网关可靠性：状态暂存 + 线程池 + 超时兜底 | 中间状态外置、CallerRunsPolicy | B |
+| 19 | **★ 验收点 B：CMPP 真下发 + 阶段一收口** | 全链路串起来 | B |
 
-> 步骤 12~15 是场景一特有的（模块索引里属 R4/R5/R7）—— **它们先做最小可跑版本，够跑通就停**，完整能力留给后续场景。
+> 步骤 12~19 是场景一特有的（模块索引里属 R4/R5/R7）—— **它们先做最小可跑版本，够跑通就停**，完整能力留给后续场景。
+> **第 14 步的 stub 必须在第 19 步收尾时清理**（类名统一 `*Stub` 后缀便于 grep）。
 
 ## 三、详细日志（倒序，最新在上）
 
