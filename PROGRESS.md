@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段二：代码重构（从零重写路线）** 🟡 文档已齐并完成一次漂移订正，待用户指令启动 R1 |
+| 项目阶段 | **阶段二：代码重构（从零重写路线）** 🟡 环境已就绪，待用户指令启动 R1 |
 | 代码状态 | backend/ 仅剩父 POM（2.0.0）+ 9 个空模块骨架；frontend/ 已清空（R1 曾抢跑，已按用户要求回退） |
-| 最近完成 | 2026-09-16：环境全项实测 + 文档漂移订正（路径/07 定位/待办/环境登记/决策记录） |
-| 当前阻塞 | ⚠️ **JDK 25 下 Lombok 注解处理失效**（R1 编译必失败，须先切 JDK 17/21 或改父 POM）+ 中间件除 MySQL/Redis 外全缺（R3 起阻塞，不阻塞 R1/R2） |
-| 下一步 | ① 解决 JDK 阻塞 ② 从 `5edb39d` 导出旧代码作对照物 ③ 启动 R1：beacon-common 重写（按 09 §5-R1 + 下方 R1 十二步表） |
+| 最近完成 | 2026-09-16：**JDK 17.0.20.1 安装并切换完成，编译链路实测通过**（Lombok + JDK17 特性 + 产物 major=61 + 父 POM 构建成功） |
+| 当前阻塞 | 无（JDK 阻塞已解决）；中间件除 MySQL/Redis 外全缺，**R3 起才会阻塞，不影响 R1/R2** |
+| 下一步 | ① 从 `5edb39d` 导出旧代码作对照物 ② 启动 R1：beacon-common 重写（按 09 §5-R1 + 下方 R1 十二步表）；**注意：新开终端/IDE 才会读到新的 JAVA_HOME** |
 
 ## 二、阶段总览
 
@@ -59,6 +59,18 @@
 | 12 | 缓存契约 7 文件 + 单测 | record + Map.ofEntries 不可变注册表 |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-16 · JDK 17 安装切换，环境阻塞解除（PC：本机 Windows）
+
+- **类型**：环境落地 + 实测验证
+- **内容**：
+  1. **安装** Eclipse Temurin JDK **17.0.20.1**（Windows x64 MSI，8 月最新补丁）→ `D:\Dev_Envs\Java\jdk-17.0.20.1`；安装向导勾选 Set JAVA_HOME + Modify PATH，**未**选 JavaSoft (Oracle) registry keys（避免与已有 Oracle JDK 25 的注册表项混淆）
+  2. **持久化结果**：机器级 `JAVA_HOME` = `D:\Dev_Envs\Java\jdk-17.0.20.1\`；机器级 PATH 首位 = `D:\Dev_Envs\Java\jdk-17.0.20.1\bin`
+  3. **六项实测验证**（全部通过）：`mvn -version` 认到 17.0.20.1（vendor Eclipse Adoptium）；探针工程（Boot 3.2.12 + release 17 + Boot 管理 Lombok 1.18.36）`compile` 成功、getter/setter 正常生成；JDK 17 特性矩阵（record/模式匹配/switch 表达式/Text Block/Stream.toList/Map.ofEntries/Map.ofEntries）全通过；产物 `major=61`；运行输出正确；`backend/` 的 `mvn -N clean install` **BUILD SUCCESS**（父 POM 已装入本地仓库）
+  4. **文档同步**：PROGRESS §一 状态表 + §四 决策记录（3 条）+ §五 待办 + §六 环境登记；`docs/learning/01` §7 报错速查补"已按方案 A 解决"；README 顶部警示改为"环境已就绪"
+- **踩坑记录**：换完 JDK 后本 AI 会话仍报 Maven 用 25 编译 —— 原因是**环境变量变更不作用于已启动的进程**（本会话启动于安装之前）。新开进程实测正确。已写入环境登记表与 `learning/01` 作为警示
+- **commit**：待提交（`docs: JDK 17 安装完成，环境阻塞解除`）
+- **遗留**：中间件（RabbitMQ/Nacos/ES/xxl-job/CMPP 模拟器）未安装，R3 起逐个补齐
 
 ### 2026-09-16 · 环境全项实测 + 文档漂移订正（PC：本机 Windows）
 
@@ -200,6 +212,8 @@
 
 | 日期 | 决策 | 理由/备注 |
 | --- | --- | --- |
+| 2026-09-16 | **JDK 基线落地**：安装 Eclipse Temurin **JDK 17.0.20.1** 至 `D:\Dev_Envs\Java\jdk-17.0.20.1`，设为机器级 `JAVA_HOME` 并置 PATH 首位（安装时未写 JavaSoft registry keys，避免与 Oracle JDK 25 注册表混淆） | 与文档基线（JDK 17）完全对齐；实测 `mvn -version` 认到 17.0.20.1、探针 Lombok 正常、产物 major=61、父 POM `mvn -N clean install` 成功。此前 JAVA_HOME 为 25.0.3，导致 Boot 3.2.12 管理的 Lombok 1.18.36 注解处理失效 |
+| 2026-09-16 | **JDK 版本策略**：不使用 JDK 25（不采用"改父 POM 加 `<proc>full</proc>` + `lombok.version=1.18.46`"的方案 B） | Boot 3.2.12 官方支持 Java 17~21，JDK 25 越界；方案 A 零侵入、无需改代码，后续每引入注解处理器（MyBatis Generator 等）都不会再踩 |
 | 2026-09-16 | **环境登记纠错**：JDK 登记由"21.0.9 + 另有 jdk-17 可选"订正为"实际 JAVA_HOME=25.0.3，本机无 JDK 17，可选 8/21/25"；Maven 3.6.3 → 3.9.12；本地仓库 `D:\App\MAVEN\maven-repository` → `D:\Dev_Tools\maven\maven-repo` | 本机全项实测（全盘搜 javac、注册表 JavaSoft\JDK、环境变量 `JAVA_HOME_8/21/25`）均无 JDK 17；旧登记存在笔误与过期信息 |
 | 2026-09-16 | **JDK 版本策略**：R1 开工前必须解决 JDK 25 下的 Lombok 注解处理失效（`mvn validate` 通过但 `compile` 失败）；优先切 JAVA_HOME 到 17/21，备选方案 B 改父 POM（`<proc>full</proc>` + `lombok.version=1.18.46`） | Boot 3.2.12 官方支持 Java 17~21，JDK 25 越界；实测 Lombok 1.18.36 在 JDK 25 失败、1.18.46 成功，且 JDK 23+ 默认 `-proc:none` |
 | 2026-09-16 | **旧项目对照源码路径失效**：`D:\Code\Java\springcloud\beacon-cloud` 本机已不存在，重写对照物改用 git 基线 commit `5edb39d` 导出 | 实测路径不存在；此前文档多处假设该目录可用（含 09 §1、PROGRESS 决策记录），全部已订正 |
@@ -221,7 +235,8 @@
 > 2026-09-16 清理：旧清单中"建 backend/、拷贝基线、git init、父 POM 升级"等项已在 0.1/0.2 完成且随路线改弦作废，故移除。以下为**当前有效待办**。
 
 **开工前（阻塞 R1）**
-- [ ] **解决 JDK 25 阻塞**：切 JAVA_HOME 到 JDK 17/21（推荐），或按 `docs/learning/01` §7 方案 B 改父 POM（`<proc>full</proc>` + `lombok.version=1.18.46`）
+- [x] ~~解决 JDK 阻塞~~ ✅ 2026-09-16 完成：JDK 17.0.20.1 已装并切换，编译链路实测通过
+- [ ] **新开终端 / 重新加载 IDE 环境**（已打开的进程仍持有旧 `JAVA_HOME=jdk-25.0.3`，会用 JDK 25 编译并复现 Lombok 失败）
 - [ ] 从 git 历史基线 `5edb39d` 导出旧代码到本地（旧项目目录已失效，重写需对照物）
 
 **R1 启动**
@@ -253,12 +268,13 @@
 
    | 机器 | 系统 | JDK（JAVA_HOME） | Maven | Maven 本地仓库 | 备注 |
    | --- | --- | --- | --- | --- | --- |
-   | 本机 | Windows 11 | **25.0.3**（`D:\Dev_Envs\Java\jdk-25.0.3`，JAVA_HOME 当前值） | 3.9.12（`D:\Dev_Tools\maven\apache-maven-3.9.12`） | `D:\Dev_Tools\maven\maven-repo`（0.95 GB） | **无 JDK 17**；可选 `JAVA_HOME_8/21/25` 三个变量，21 为 `D:\Dev_Envs\Java\jdk-21.0.9`（Boot 3.2 官方支持上限） |
+   | 本机 | Windows 11 | **17.0.20.1 Temurin**（`D:\Dev_Envs\Java\jdk-17.0.20.1\`，已设为机器级 JAVA_HOME 且 PATH 首位） | 3.9.12（`D:\Dev_Tools\maven\apache-maven-3.9.12`） | `D:\Dev_Tools\maven\maven-repo`（0.95 GB） | 另有 `JAVA_HOME_8/21/25` 三个备用变量；JDK 25 为 Oracle 版 |
    | （待填） | | | | | |
 
-   > ⚠️ **JDK 25 阻塞项（2026-09-16 实测）**：Boot 3.2.12 管理的 Lombok 1.18.36 在 JDK 25 下注解处理不生效（JDK 23+ 默认 `-proc:none` 叠加版本不支持），`mvn validate` 能过、`compile` 必失败（找不到 getter/setter）。**R1 开工前必须先解决**：切 JDK 17/21（推荐）或在父 POM 加 `<proc>full</proc>` + `<lombok.version>1.18.46</lombok.version>`。详见 `docs/learning/01` §7。
-   > 本机 JDK 清单实测：`jdk1.8.0_471` / `jdk-21.0.9` / `jdk-25.0.3` + IDE 自带 JBR（IDEA 21.0.10、DataGrip/PyCharm 25.0.2）。
-   > 环境漂移订正：旧登记"另有 jdk-17 17.0.9 可选"**不属实**（全盘搜索、注册表、环境变量均无 17）；旧登记 Maven 3.6.3 与仓库 `D:\App\MAVEN\maven-repository` 均已过期。
+   > ✅ **JDK 阻塞已解决（2026-09-16 实测通过）**：安装 Eclipse Temurin JDK 17.0.20.1（Windows x64 MSI，装于 `D:\Dev_Envs\Java\jdk-17.0.20.1`，安装时勾选 Set JAVA_HOME + Modify PATH，**未**安装 JavaSoft (Oracle) registry keys）。
+   > **实测验证结果**：① `mvn -version` → `Java version: 17.0.20.1, vendor: Eclipse Adoptium`；② 探针工程（Boot 3.2.12 + `release 17` + Boot 管理的 Lombok）`compile` **成功**，Lombok getter/setter 正常生成（JDK 25 下必失败）；③ JDK 17 特性矩阵 R1/R3/R4/R5/R6/R7/R9 全部编译通过；④ 产物字节码 `major version: 61`（Java 17）；⑤ 运行时输出正确；⑥ `backend/` 执行 `mvn -N clean install` → **BUILD SUCCESS**，父 POM 已装入本地仓库。
+   > ⚠️ **注意**：环境变量变更**只对新开的进程生效**。安装前已打开的终端、IDE、本 AI 会话仍持有旧值（`JAVA_HOME=jdk-25.0.3`）——**必须新开终端或在 IDE 中重新加载环境**，否则 Maven 仍会用 JDK 25 编译并复现 Lombok 失败。
+   > 本机 JDK 清单：`jdk-17.0.20.1`（新增，当前使用）/ `jdk-21.0.9` / `jdk-25.0.3` / `jdk1.8.0_471` + IDE 自带 JBR（IDEA 21.0.10、DataGrip/PyCharm 25.0.2）。
 
    ### 6.2 中间件（R1~R10 联调前置）
 

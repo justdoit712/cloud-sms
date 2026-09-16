@@ -3,7 +3,7 @@
 > 本项目是 [beacon-cloud](https://github.com/justdoit712/beacon-cloud) 短信平台的**重构版**。
 > 目标：JDK 17 + Spring Boot 3.2 + Spring Cloud 2023.0.3 + 组件升级，前后端分离，边重构边学习。
 > **当前阶段：文档先行。本目录目前只有文档，尚无代码。**
-> **⚠️ 本机环境阻塞（2026-09-16 实测）**：JAVA_HOME 现为 JDK 25，而 Boot 3.2.12 管理的 Lombok 1.18.36 在 JDK 25 下注解处理失效（`mvn validate` 能过、`compile` 必失败）。开工前须切 JAVA_HOME 到 JDK 17/21 或改父 POM，详见 `PROGRESS.md` §六 与 `docs/learning/01` §7。
+> **✅ 环境已就绪（2026-09-16 实测）**：JDK 17.0.20.1（Temurin）+ Maven 3.9.12 编译链路验证通过。**注意**：环境变量对已打开的终端/IDE 不生效，须新开终端或重新加载 IDE 环境。详见 `PROGRESS.md` §六。
 
 ## 目录规划
 

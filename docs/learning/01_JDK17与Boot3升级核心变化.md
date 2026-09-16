@@ -152,6 +152,9 @@ Java EE（企业版规范，包名 `javax.*`）2017 年捐给 Eclipse 基金会�
 | `找不到符号: 方法 setXxx/getXxx`（Lombok 全失效，**仅 compile 阶段报，validate 不报**） | ① JDK 23+ 起 `javac` 默认 `-proc:none`（注解处理关闭）；② Boot 3.2.12 管理的 Lombok 1.18.36 不支持 JDK 25 | 二选一：<br>**A（推荐）** 把 JAVA_HOME 切到 JDK 17 或 21（Boot 3.2 官方支持范围 17~21）→ 零改动；<br>**B** 坚持用 JDK 25 → 父 POM 同时加 `maven-compiler-plugin` 的 `<proc>full</proc>` 与 `<lombok.version>1.18.46</lombok.version>`（版本覆盖 Boot 管理值） |
 
 > **实测记录（2026-09-16，本机 JDK 25.0.3 + Maven 3.9.12 + Boot 3.2.12）**：`mvn -N validate` **成功**（父 POM 可解析），但真正 `compile` 时才暴露 Lombok 注解处理器未运行；`record`/`sealed`/模式匹配 `instanceof`/`switch` 表达式/Text Block/`Stream.toList`/`Map.ofEntries` 全部编译通过，产物 `major version: 61`（Java 17）正确。单独用 `javac -proc:full` 隔离测试：Lombok 1.18.36 失败、1.18.46 成功 —— 证明是"注解处理开关 + Lombok 版本"两个因素叠加，不是编译器版本本身不兼容 release 17。**注意 JDK 17 语法边界**：`switch` 中的类型模式、`switch` 对 sealed 类型的穷尽推断都是 JDK 21 特性，在 `release 17` 下会直接编译报错。
+>
+> **✅ 本机已按方案 A 解决（2026-09-16）**：安装 Eclipse Temurin **JDK 17.0.20.1**，设为机器级 `JAVA_HOME` 并置 PATH 首位。实测 `mvn -version` 认到 17.0.20.1；探针工程 Lombok 正常生成 getter/setter；产物 `major=61`；`backend/` 的 `mvn -N clean install` BUILD SUCCESS。**不需要**方案 B（父 POM 无需任何改动，保持与文档基线一致）。
+> ⚠️ 换 JDK 后**必须新开终端/重载 IDE**：环境变量变更不作用于已启动的进程，安装前打开的终端仍会用旧 JDK 编译并复现该报错。
 
 ---
 
