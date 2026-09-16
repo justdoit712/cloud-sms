@@ -3,6 +3,7 @@
 > 本项目是 [beacon-cloud](https://github.com/justdoit712/beacon-cloud) 短信平台的**重构版**。
 > 目标：JDK 17 + Spring Boot 3.2 + Spring Cloud 2023.0.3 + 组件升级，前后端分离，边重构边学习。
 > **当前阶段：文档先行。本目录目前只有文档，尚无代码。**
+> **⚠️ 本机环境阻塞（2026-09-16 实测）**：JAVA_HOME 现为 JDK 25，而 Boot 3.2.12 管理的 Lombok 1.18.36 在 JDK 25 下注解处理失效（`mvn validate` 能过、`compile` 必失败）。开工前须切 JAVA_HOME 到 JDK 17/21 或改父 POM，详见 `PROGRESS.md` §六 与 `docs/learning/01` §7。
 
 ## 目录规划
 
@@ -18,8 +19,8 @@ cloud-sms\
 │   ├── db\                       # 数据库表结构 DDL（重写 webmaster 对照）
 │   ├── protocol\                 # CMPP 2.0 报文规格（网关重写用）
 │   └── ops\                      # Nacos 配置清单（各服务配置项登记）
-├── backend\         # 已建（9 个 beacon-* 空模块骨架，待步骤 0.1 拷贝基线）
-└── frontend\        # 已建（空目录，待步骤 0.1 拷贝旧 Frontend）
+├── backend\         # 已建（父 POM 2.0.0 + 9 个 beacon-* 空模块骨架，代码待 R1~R9 从零重写）
+└── frontend\        # 已建（空目录，待 R10 从零重写 Vue3 + TS）
 ```
 
 ## 文档导航（按阅读顺序）
@@ -37,6 +38,7 @@ cloud-sms\
 10. `docs/db/01_数据库表结构DDL.md` —— 18 张表 DDL（重写 beacon-webmaster 前对照）
 11. `docs/protocol/01_CMPP2报文规格.md` —— CMPP 2.0 报文规范 + P1~P25 缺陷规避（重写 beacon-smsgateway 前必读）
 12. `docs/ops/01_Nacos配置清单.md` —— 各服务配置项登记表（新增配置必须在此登记）
+13. `docs/07_Vue3视觉与交互落地方案.md` —— R10 前端重写的视觉/交互规格（tokens、ProTable、ProSearch、StatusTag 规范）
 
 ## 阶段
 

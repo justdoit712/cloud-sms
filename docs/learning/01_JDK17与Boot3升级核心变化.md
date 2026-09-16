@@ -31,7 +31,7 @@ Spring 生态版本必须成套，否则启动即报错：
 本项目选择 **Boot 3.2.12 + Cloud 2023.0.3 + Alibaba 2023.0.3.2**：
 - Boot 3.2 是 JDK 17 时代最成熟的 LTS 线之一，且 重构基线（learning/00 版本表）已冻结此选型。
 - Cloud Alibaba 2023.0.3.2 是官方发布版（Maven Central 实测存在）。
-- 本机只有 JDK 21：用 `<maven.compiler.release>17</maven.compiler.release>` 编译，产物字节码即为 17，运行在 17/21 均可。
+- 本机只有 JDK 17 以上的高版本：用 `<maven.compiler.release>17</maven.compiler.release>` 编译，产物字节码即为 17，运行在 17/21 均可。
 
 ## 3. JDK 8 → 17 的新特性（重构中会用到）
 
@@ -149,6 +149,9 @@ Java EE（企业版规范，包名 `javax.*`）2017 年捐给 Eclipse 基金会�
 | `Error creating bean ... druid` | 用 boot2 的 druid starter | 换 `druid-spring-boot-3-starter` |
 | JUnit 编译错误 `org.junit` | Boot 3 无 JUnit 4 | 测试迁移 JUnit 5 |
 | MQ 消息 LocalDateTime 序列化异常 | 转换器用裸 ObjectMapper | 注入 Boot 的 ObjectMapper Bean |
+| `找不到符号: 方法 setXxx/getXxx`（Lombok 全失效，**仅 compile 阶段报，validate 不报**） | ① JDK 23+ 起 `javac` 默认 `-proc:none`（注解处理关闭）；② Boot 3.2.12 管理的 Lombok 1.18.36 不支持 JDK 25 | 二选一：<br>**A（推荐）** 把 JAVA_HOME 切到 JDK 17 或 21（Boot 3.2 官方支持范围 17~21）→ 零改动；<br>**B** 坚持用 JDK 25 → 父 POM 同时加 `maven-compiler-plugin` 的 `<proc>full</proc>` 与 `<lombok.version>1.18.46</lombok.version>`（版本覆盖 Boot 管理值） |
+
+> **实测记录（2026-09-16，本机 JDK 25.0.3 + Maven 3.9.12 + Boot 3.2.12）**：`mvn -N validate` **成功**（父 POM 可解析），但真正 `compile` 时才暴露 Lombok 注解处理器未运行；`record`/`sealed`/模式匹配 `instanceof`/`switch` 表达式/Text Block/`Stream.toList`/`Map.ofEntries` 全部编译通过，产物 `major version: 61`（Java 17）正确。单独用 `javac -proc:full` 隔离测试：Lombok 1.18.36 失败、1.18.46 成功 —— 证明是"注解处理开关 + Lombok 版本"两个因素叠加，不是编译器版本本身不兼容 release 17。**注意 JDK 17 语法边界**：`switch` 中的类型模式、`switch` 对 sealed 类型的穷尽推断都是 JDK 21 特性，在 `release 17` 下会直接编译报错。
 
 ---
 

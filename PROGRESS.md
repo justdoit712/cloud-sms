@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段二：代码重构（从零重写路线）** 🟡 文档已齐，待用户指令启动 R1 |
+| 项目阶段 | **阶段二：代码重构（从零重写路线）** 🟡 文档已齐并完成一次漂移订正，待用户指令启动 R1 |
 | 代码状态 | backend/ 仅剩父 POM（2.0.0）+ 9 个空模块骨架；frontend/ 已清空（R1 曾抢跑，已按用户要求回退） |
-| 最近完成 | 2026-09-13：三份缺口文档补齐（DDL / CMPP 报文规格 / Nacos 配置清单）+ 索引同步 |
-| 当前阻塞 | 无 |
-| 下一步 | 待用户明确指令后启动 R1：beacon-common 重写（模型/常量/异常/工具/缓存契约，按 09 §5-R1） |
+| 最近完成 | 2026-09-16：环境全项实测 + 文档漂移订正（路径/07 定位/待办/环境登记/决策记录） |
+| 当前阻塞 | ⚠️ **JDK 25 下 Lombok 注解处理失效**（R1 编译必失败，须先切 JDK 17/21 或改父 POM）+ 中间件除 MySQL/Redis 外全缺（R3 起阻塞，不阻塞 R1/R2） |
+| 下一步 | ① 解决 JDK 阻塞 ② 从 `5edb39d` 导出旧代码作对照物 ③ 启动 R1：beacon-common 重写（按 09 §5-R1 + 下方 R1 十二步表） |
 
 ## 二、阶段总览
 
@@ -59,6 +59,20 @@
 | 12 | 缓存契约 7 文件 + 单测 | record + Map.ofEntries 不可变注册表 |
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-16 · 环境全项实测 + 文档漂移订正（PC：本机 Windows）
+
+- **类型**：环境核查 + 文档纠正
+- **内容**：
+  1. **环境全项实测**：逐一验证工具链（JDK/Maven/仓库/Settings/Node/pnpm/Git/PS 执行策略）与中间件（MySQL/Redis/RabbitMQ/Nacos/ES/xxl-job/CMPP/Docker/WSL）；结论写入 §六 环境登记（旧登记含笔误与过期信息，已订正）
+  2. **JDK 25 阻塞定位**：探针工程实测 `spring-boot-starter-parent:3.2.12` + `release 17` → 父 POM 解析成功、JDK 17 语言特性全通过、产物 `major=61` 正确，**但 Lombok 注解处理失效**（`validate` 过、`compile` 炸）。根因两点叠加：JDK 23+ 默认 `-proc:none`；Boot 3.2.12 管理的 Lombok 1.18.36 不支持 JDK 25（隔离测试 1.18.46 成功）。已写入 `docs/learning/01` §7 报错速查
+  3. **路径漂移订正**：`D:\Code\project\cloud-sms` → `D:\Code_Projects\Project\cloud-sms`（`AI代码编写规范.md`、`learning/00`×3、`learning/08`）
+  4. **旧源码路径失效**：实测 `D:\Code\Java\springcloud\beacon-cloud` 不存在 → `learning/00`、`learning/09`、决策记录同步订正，对照物改为从 git 基线 `5edb39d` 导出
+  5. **`docs/07` 重定位**：原文案假设"Vue3 重构已完成、只做视觉优化"，与 R10 从零搭建不符 → 加定位说明段 + §11 落地节奏改写为"规范先行、样板定版"的搭建顺序
+  6. **PROGRESS 清理**：§一 当前状态（新增阻塞项）、§五 待办清单（移除已完成的 0.1/0.2 陈旧项，重建为开工前/R1/联调前/长期四组）、§四 新增 3 条决策记录、§六 环境登记重写
+- **验证**：`mvn -N validate` 在 `backend/` 下 BUILD SUCCESS（父 POM 可解析、Central 可达）；探针产物 `javap` 确认 `major version: 61`
+- **commit**：`docs: 环境实测订正与文档漂移修正`
+- **遗留**：JDK 阻塞未解决（待用户选择方案 A 切 17/21 或方案 B 改父 POM）；中间件安装未启动
 
 ### 2026-09-13 · 提交历史重写：msg 统一去掉括号（PC：本机 Windows）
 
@@ -186,6 +200,9 @@
 
 | 日期 | 决策 | 理由/备注 |
 | --- | --- | --- |
+| 2026-09-16 | **环境登记纠错**：JDK 登记由"21.0.9 + 另有 jdk-17 可选"订正为"实际 JAVA_HOME=25.0.3，本机无 JDK 17，可选 8/21/25"；Maven 3.6.3 → 3.9.12；本地仓库 `D:\App\MAVEN\maven-repository` → `D:\Dev_Tools\maven\maven-repo` | 本机全项实测（全盘搜 javac、注册表 JavaSoft\JDK、环境变量 `JAVA_HOME_8/21/25`）均无 JDK 17；旧登记存在笔误与过期信息 |
+| 2026-09-16 | **JDK 版本策略**：R1 开工前必须解决 JDK 25 下的 Lombok 注解处理失效（`mvn validate` 通过但 `compile` 失败）；优先切 JAVA_HOME 到 17/21，备选方案 B 改父 POM（`<proc>full</proc>` + `lombok.version=1.18.46`） | Boot 3.2.12 官方支持 Java 17~21，JDK 25 越界；实测 Lombok 1.18.36 在 JDK 25 失败、1.18.46 成功，且 JDK 23+ 默认 `-proc:none` |
+| 2026-09-16 | **旧项目对照源码路径失效**：`D:\Code\Java\springcloud\beacon-cloud` 本机已不存在，重写对照物改用 git 基线 commit `5edb39d` 导出 | 实测路径不存在；此前文档多处假设该目录可用（含 09 §1、PROGRESS 决策记录），全部已订正 |
 | 2026-09-13 | **代码须经用户明确指令才动工**（R1 抢跑已回退） | 用户要求：先补齐全部文档、一步一步搭建；文档未齐/未确认前不动代码 |
 | 2026-09-13 | **commit msg 约定：`类型: 描述`，不带任何括号**（历史已全量重写 + force push） | 用户要求；AI 规范 §5.5、09 §2 已同步 |
 | 2026-09-13 | 中间件版本修正：MySQL 按旧库实测 **9.1.0**（原 09 方案写 8.0） | 旧库 dump 证据（backups/mysql/user_role_permission_seed_20260519）；DDL 文档已收录待核对项 |
@@ -201,10 +218,27 @@
 
 ## 五、待办清单（下一步）
 
-- [ ] 用户审阅：`docs/learning/09`（重写方案）、`AI代码编写规范.md`
-- [ ] 确认后启动阶段二：建 `backend/`、从旧项目拷贝基线（排除 .git/node_modules/target/backups/xxl-job）、git init、父 POM 升级
-- [ ] 环境差异核对（跨机）：各 PC 的 JDK（需 17+，可用 21 以 --release 17 编译）、Maven（≥3.6.3）
-- [ ] 待办：hippo4j 2.x 发布后回归动态线程池；生产部署方式（Nginx 托管前端）确认；Spring Cloud Gateway 引入评估
+> 2026-09-16 清理：旧清单中"建 backend/、拷贝基线、git init、父 POM 升级"等项已在 0.1/0.2 完成且随路线改弦作废，故移除。以下为**当前有效待办**。
+
+**开工前（阻塞 R1）**
+- [ ] **解决 JDK 25 阻塞**：切 JAVA_HOME 到 JDK 17/21（推荐），或按 `docs/learning/01` §7 方案 B 改父 POM（`<proc>full</proc>` + `lombok.version=1.18.46`）
+- [ ] 从 git 历史基线 `5edb39d` 导出旧代码到本地（旧项目目录已失效，重写需对照物）
+
+**R1 启动**
+- [ ] 按 PROGRESS §二 R1 十二步表逐步执行（每步 2~4 文件 + 一个学习点 + 一个 commit）
+
+**联调前（R3 起逐个补齐）**
+- [ ] 安装 Nacos 2.3.x（注册中心 + 配置中心，按 `docs/ops/01_Nacos配置清单.md` 建 8 个 DataId）
+- [ ] 安装 RabbitMQ 3.12+ 并启用 `rabbitmq_delayed_message_exchange` 插件
+- [ ] 安装 Elasticsearch 8.x（R3 需要）
+- [ ] 安装 xxl-job-admin 2.4.x（R8 需要）
+- [ ] 准备 CMPP 模拟器（127.0.0.1:7890，R7 需要）
+- [ ] 核对本机 MySQL 8.4.8 与旧库 9.1.0 的建表差异（`docs/db/01` 待核对清单 22 项）
+
+**长期**
+- [ ] hippo4j 2.x 发布后回归动态线程池（只改 `ThreadPoolConfig` 一个文件，Bean 名不变）
+- [ ] 生产部署方式（Nginx 托管前端 + /api 反代）确认
+- [ ] Spring Cloud Gateway 引入评估
 
 ## 六、跨机协作约定
 
@@ -213,9 +247,40 @@
 3. **决策必须落纸**：聊天里口头定的方向，当场写进"决策记录"，否则换机器就丢。
 4. **代码真相源仍是 git**：本文档只记状态与决策，代码细节以 git 为准；文档与代码同仓同步提交。
 5. **避免冲突**：阶段二按 `docs/learning/09` 的模块顺序线性推进，一次只动一个模块；发现文档与代码不一致时，以代码为准并修正文档。
-6. **环境登记**（多机各自填一行）：
+6. **环境登记**（多机各自填一行；**2026-09-16 本机全项实测复核**）：
 
-| 机器 | 系统 | JDK | Maven | 备注 |
-| --- | --- | --- | --- | --- |
-| 本机 | Windows 11 | 21.0.9（JAVA_HOME=D:\Dev_Envs\Java\jdk-21）；另有 jdk-17 17.0.9 可选 | 3.6.3 | 用 --release 17 编译；本地仓库 D:\App\MAVEN\maven-repository |
-| （待填） | | | | |
+   ### 6.1 工具链
+
+   | 机器 | 系统 | JDK（JAVA_HOME） | Maven | Maven 本地仓库 | 备注 |
+   | --- | --- | --- | --- | --- | --- |
+   | 本机 | Windows 11 | **25.0.3**（`D:\Dev_Envs\Java\jdk-25.0.3`，JAVA_HOME 当前值） | 3.9.12（`D:\Dev_Tools\maven\apache-maven-3.9.12`） | `D:\Dev_Tools\maven\maven-repo`（0.95 GB） | **无 JDK 17**；可选 `JAVA_HOME_8/21/25` 三个变量，21 为 `D:\Dev_Envs\Java\jdk-21.0.9`（Boot 3.2 官方支持上限） |
+   | （待填） | | | | | |
+
+   > ⚠️ **JDK 25 阻塞项（2026-09-16 实测）**：Boot 3.2.12 管理的 Lombok 1.18.36 在 JDK 25 下注解处理不生效（JDK 23+ 默认 `-proc:none` 叠加版本不支持），`mvn validate` 能过、`compile` 必失败（找不到 getter/setter）。**R1 开工前必须先解决**：切 JDK 17/21（推荐）或在父 POM 加 `<proc>full</proc>` + `<lombok.version>1.18.46</lombok.version>`。详见 `docs/learning/01` §7。
+   > 本机 JDK 清单实测：`jdk1.8.0_471` / `jdk-21.0.9` / `jdk-25.0.3` + IDE 自带 JBR（IDEA 21.0.10、DataGrip/PyCharm 25.0.2）。
+   > 环境漂移订正：旧登记"另有 jdk-17 17.0.9 可选"**不属实**（全盘搜索、注册表、环境变量均无 17）；旧登记 Maven 3.6.3 与仓库 `D:\App\MAVEN\maven-repository` 均已过期。
+
+   ### 6.2 中间件（R1~R10 联调前置）
+
+   | 中间件 | 项目要求 | 本机实测 | 状态 |
+   | --- | --- | --- | --- |
+   | MySQL | 旧库 9.1.0 | 8.4.8（`D:\Dev_Tools\Mysql\mysql-8.4.8-winx64`，服务 MySQL 已停止/手动启动） | ⚠️ 版本不同但为 LTS，`utf8mb4_0900_ai_ci` 可用 |
+   | Redis | 7.x | 7.4.9（`D:\Dev_Tools\redis\Redis-7.4.9-Windows-x64-cygwin-with-Service`，未运行） | ✅ 版本满足，需手动启动 |
+   | RabbitMQ | 3.12+ 且装 delayed 插件 | **未安装** | ❌ R4~R7 阻塞 |
+   | Nacos | 2.3.x | **未安装** | ❌ 全服务阻塞 |
+   | Elasticsearch | 8.x | **未安装** | ❌ R3 阻塞 |
+   | xxl-job-admin | 2.4.x | **未安装** | ❌ R8 阻塞 |
+   | CMPP 模拟器 | `模拟cmpp-server.zip` | **未找到** | ❌ R7 阻塞 |
+   | Docker / WSL | 可选 | **均未安装** | ⚠️ 无容器化捷径 |
+
+   > **缓解**：R1（beacon-common 纯库）+ R2（仅需 Redis）不依赖上表缺口，可立即开工；R3 起逐个补齐。
+
+   ### 6.3 前端与其它
+
+   | 项 | 实测 |
+   | --- | --- |
+   | Node / npm / pnpm | v22.22.0 / 10.9.4 / 11.7.0（pnpm 位于 harness 目录，非独立安装） |
+   | PowerShell | 执行策略 Undefined → `npm.ps1`/`pnpm.ps1` 被拒，须用 `npm.cmd`/`pnpm.cmd` |
+   | Git | 2.53.0.windows.1 |
+   | Maven settings.xml | `D:\Dev_Tools\maven\apache-maven-3.9.12\conf\settings.xml`：仅内置 HTTP blocker，无 mirror/代理，Central 直连可用 |
+   | **旧项目对照源码** | ⚠️ `D:\Code\Java\springcloud\beacon-cloud` **已不存在**，需对照时从 git 基线 `5edb39d` 导出 |
