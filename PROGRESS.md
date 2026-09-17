@@ -9,11 +9,11 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 项目阶段 | **阶段一：单发短信跑通到网关**（场景驱动，共 8 个场景；里程碑进度 1/9，仅前置完成） 🟡 待装中间件后启动 |
-| 代码状态 | backend/ 仅剩父 POM（2.0.0）+ 9 个空模块骨架；frontend/ 已清空（旧抢跑代码已按用户要求回退） |
-| 最近完成 | 2026-09-16：**JDK 17.0.20.1 安装并切换完成，编译链路实测通过**（Lombok + JDK17 特性 + 产物 major=61 + 父 POM 构建成功） |
-| 当前阻塞 | 场景一需 **Nacos + RabbitMQ(+delayed 插件) + CMPP 模拟器 + Redis**，均未装/未启 —— **这是当前唯一阻塞项** |
-| 下一步 | ① 从 `5edb39d` 导出旧代码作对照物 ② 装并启场景一所需中间件 ③ 启动阶段一：单发短信端到端打通 |
+| 项目阶段 | **阶段一：单发短信跑通到网关**（场景驱动，共 8 个场景；里程碑进度 1/9） 🟡 **前置已完成，代码第 1/19 步落地** |
+| 代码状态 | backend/：父 POM（2.0.0）挂载 **5 模块**（common/cache/api/strategy/smsgateway）+ 各模块 pom + 4 个启动类，`mvn install` 通过；其余 4 模块（search/push/monitor/webmaster）注释保留等各自场景开启。frontend/ 空 |
+| 最近完成 | 2026-09-17：**环境转为 Docker Desktop（WSL2）+ 阶段一第 1 步提交 `ea102ff`**（父 POM 挂 5 模块 + 启动类骨架，编译通过） |
+| 当前阻塞 | **无** —— 阶段一第 1~11 步不需要中间件；第 12 步起所需的 Nacos/RabbitMQ/Redis 已在 Docker 中就绪 |
+| 下一步 | 按 `docs/learning/10_阶段一执行手册.md` 推进 **第 2 步 `StandardSubmit` → 第 11 步**（common 模块，全程无需中间件） |
 
 ## 二、阶段总览（**场景驱动**：一个阶段 = 一个能真实跑通的业务场景，从最小闭环逐步长大）
 
@@ -79,6 +79,24 @@
 > **第 14 步的 stub 必须在第 19 步收尾时清理**（类名统一 `*Stub` 后缀便于 grep）。
 
 ## 三、详细日志（倒序，最新在上）
+
+### 2026-09-17 · 环境转为 Docker Desktop + 阶段一第 1 步落地（PC：本机 Windows）
+
+- **类型**：环境重建 + 代码首落地
+- **内容**：
+  1. **环境方案变更**：废弃原 Linux 虚拟机（CentOS 7，因 `hwclock` 触发内核 panic、时钟漂移、sshd 挂掉等一连串问题而不可用），改为 **Docker Desktop on Windows（WSL2 后端）**。落地 `D:\docker\middleware\docker-compose.yml`，含 Nacos 2.3.2 / RabbitMQ 3.13-management / MySQL 8.4 / Redis 7.4，全部映射到 `127.0.0.1`；WSL 资源限制 `memory=6GB, processors=4`（`~/.wslconfig`）
+  2. **Nacos 4 个 DataId 已建**（`beacon-{api,strategy,smsgateway,cache}-dev.yml`），端口规划 8081/8082/8083/8084，8080 留给阶段六 webmaster；详细登记见 `docs/ops/01` 附录 C
+  3. **阶段一第 1 步完成**：父 POM 挂载 5 模块（common/cache/api/strategy/smsgateway，其余 4 个注释保留）+ 5 个子模块 pom + 4 个启动类（`ApiStarterApp`/`CacheStarterApp`/`StrategyStarterApp`/`SmsGatewayStarterApp`）+ 清理 9 个 `.gitkeep`
+  4. **编译验证通过**：`mvn -q install` 退出码 0，5 个模块全部装入本地仓库 `maven-repo\com\cz\`
+- **踩坑记录（已写入 `docs/ops/01` 附录 C.3）**：
+  1. 旧 VM 拉镜像报证书未生效 → 根因是 VM 系统时钟比 RTC 落后 4 个月
+  2. 中间件端口 TCP 可连但 HTTP 无响应 → `wsl --shutdown` 后 `wslrelay` 转发进程未重建，**彻底重启 Docker Desktop** 解决
+  3. 宿主机访问 localhost 中间件超时 → 系统代理（`127.0.0.1:7897`）劫持，需加 no-proxy 例外
+- **commit**：`ea102ff` feat: 阶段一第1步 父POM挂载5模块并生成骨架启动类
+- **遗留**：
+  1. RabbitMQ `rabbitmq_delayed_message_exchange` 插件未启用（官方镜像不含，**阶段五前必须补**）
+  2. 各模块 `bootstrap.yml` 未创建 —— 按计划随对应场景落地（api 第 12 步 / strategy 第 13 步 / smsgateway 第 14 步）
+  3. CMPP 模拟器未准备（已随 CMPP 后置到第 16 步）
 
 ### 2026-09-16 · JDK 17 安装切换，环境阻塞解除（PC：本机 Windows）
 
