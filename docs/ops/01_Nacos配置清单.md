@@ -328,7 +328,50 @@ beacon-cache 作为 Redis 门面，底层直连 Redis，使用第 2 节通用配
 
 | 模块 | 新增配置键 | 日期 |
 | --- | --- | --- |
-| （示例）beacon-strategy | sms.fee.single | 待填 |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| beacon-api | filters, internal.sms.token, cache.client.auth.* | 2026-09-17 |
+| beacon-strategy | sms.fee.single, internal.balance.token, cache.client.auth.* | 2026-09-17 |
+| beacon-smsgateway | cmpp.*, cmpp.pool.*, cmpp.state.*, cache.client.auth.* | 2026-09-17 |
+| beacon-cache | cache.namespace.*, cache.security.* | 2026-09-17 |
+
+---
+
+## 附录 C：本地开发环境实测登记（2026-09-17）
+
+> 本机已用 **Docker Desktop（WSL2 后端）** 落地一套本地中间件，替代原计划的 Linux 虚拟机方案。
+> **所有地址统一为 `127.0.0.1`**（代码与中间件同机，不再有跨机 IP 漂移）。
+
+### C.1 中间件实例
+
+| 组件 | 镜像 | 地址 | 凭据 | 首次需要阶段 |
+| --- | --- | --- | --- | --- |
+| Nacos | `nacos/nacos-server:v2.3.2` | `127.0.0.1:8848`（gRPC `9848/9849`） | 无认证（`auth_enabled=false`） | 阶段一 |
+| RabbitMQ | `rabbitmq:3.13-management` | `127.0.0.1:5672`，管理台 `15672` | `guest` / `guest` | 阶段一 |
+| Redis | `redis:7.4` | `127.0.0.1:6379` | 无密码 | 阶段一 |
+| MySQL | `mysql:8.4` | `127.0.0.1:3306` | `root` / `root` | 阶段二 |
+
+- Compose 文件：`D:\docker\middleware\docker-compose.yml`
+- 数据卷：`D:\docker\middleware\{mysql,redis}\data`
+- WSL 资源限制：`%USERPROFILE%\.wslconfig` → `memory=6GB`、`processors=4`、`swap=2GB`
+- **RabbitMQ 延迟插件未启用**（`rabbitmq_delayed_message_exchange` 不在官方镜像内，需挂载 `.ez` 或换镜像）—— **阶段五做客户回调重试前必须补上**。
+
+### C.2 已创建的 DataId（2026-09-17）
+
+| DataId | 关键内容 |
+| --- | --- |
+| `beacon-api-dev.yml` | `server.port=8081`；`filters: apikey,ip,sign,template`；`internal.sms.token=${INTERNAL_SMS_TOKEN}`；`cache.client.auth.enabled=false` |
+| `beacon-strategy-dev.yml` | `server.port=8082`；`sms.fee.single=50`（厘）；`internal.balance.token=${INTERNAL_BALANCE_TOKEN}` |
+| `beacon-smsgateway-dev.yml` | `server.port=8083`；`cmpp.host/port/service-id/pwd`；`cmpp.pool.*`；`cmpp.state.*-ttl-seconds` |
+| `beacon-cache-dev.yml` | `server.port=8084`；`spring.data.redis.*`；`cache.namespace.full-prefix`；`cache.security.enabled=false` |
+
+> **三点注意**：
+> 1. **端口规划**：`8081` api / `8082` strategy / `8083` smsgateway / `8084` cache；**`8080` 预留给阶段六的 `beacon-webmaster`**。
+> 2. **鉴权开关是阶段一的临时值**：`cache.client.auth.enabled=false` 与 `cache.security.enabled=false` —— 此时 `beacon-cache` 服务尚未实现（第 13 步才写），开启签名鉴权会导致调用不通。第 11 步 `CacheAuthSignUtil` 落地且 cache 服务跑通后**必须改回 `true`**。
+> 3. **`internal.*.token` 为必填项**（修旧版"默认空串 = fail-open"缺陷 🔴#25），当前用 `${...}` 占位，真实值联调时由环境变量注入。
+
+### C.3 环境踩坑记录（供后续排障参考）
+
+| 现象 | 根因 | 处置 |
+| --- | --- | --- |
+| Docker Hub 拉镜像报 `certificate has expired or is not yet valid` | 原 Linux VM 的系统时钟比 RTC 落后 4 个月 | 弃用 VM，改用 Windows + Docker Desktop（宿主时钟正确） |
+| 中间件端口 TCP 可连但 HTTP 无响应 | `wsl --shutdown` 后 Docker Desktop 的 `wslrelay` 端口转发进程未重建 | **完全重启 Docker Desktop**（停掉所有 `*docker*` 进程 → 重开） |
+| 宿主机 PowerShell 访问本地中间件超时 | 系统代理开启（`ProxyEnable=1`，`127.0.0.1:7897`）劫持 localhost 请求 | 探测时加 `--noproxy "*"`；Java 应用建议配置 no-proxy 例外（`http.nonProxyHosts`） |

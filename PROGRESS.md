@@ -44,12 +44,12 @@
 > **★ 逐步细节以 `docs/learning/10_阶段一执行手册.md` 为准**（24 个工作项 = 第 0 步 4 个前置 + 第 1~19 步实现；每步含交付物/学习点/验收命令/commit message）。
 > **★ 2026-09-16 调整：CMPP 后置。** 阶段一拆两段验收：**验收点 A = 接口闭环**（第 12~15 步，Postman/curl 实测，只需 Nacos+RabbitMQ，sm gateway 先用 stub 只打日志）→ **验收点 B = CMPP 真下发**（第 16~19 步，需模拟器 + Netty）。CMPP 模拟器缺失**不再阻塞前 15 步**。
 
-| 步 | 事项 | 学习点 |
-| --- | --- | --- |
-| 0-a | 装并启 Nacos 2.3.x，按 `docs/ops/01` 建 DataId | 注册中心 + 配置中心的数据模型 |
-| 0-b | 装 RabbitMQ 3.12+ 并启用 `rabbitmq_delayed_message_exchange` | 延迟交换机为何要插件 |
-| 0-c | 启 Redis 7.4.9；**CMPP 模拟器延后到第 16 步前** | 模拟器与被测网关的方向关系 |
-| 0-d | ✅ **已完成** 从 git 基线 `5edb39d` 导出旧代码作对照物（`_reference/`，374 Java / 9 模块，已 gitignore） | git worktree 取历史物 |
+| 步 | 事项 | 学习点 | 状态 |
+| --- | --- | --- | --- |
+| 0-a | 装并启 Nacos 2.3.x，按 `docs/ops/01` 建 DataId | 注册中心 + 配置中心的数据模型 | ✅ **2026-09-17** Nacos 2.3.2（Docker）+ 4 个 DataId 已建（见 `docs/ops/01` 附录 C） |
+| 0-b | 装 RabbitMQ 3.12+ 并启用 `rabbitmq_delayed_message_exchange` | 延迟交换机为何要插件 | 🟡 服务 ✅（3.13-management）；**插件未启用**（官方镜像不含，阶段五前补） |
+| 0-c | 启 Redis 7.4.9；**CMPP 模拟器延后到第 16 步前** | 模拟器与被测网关的方向关系 | ✅ Redis 7.4 已启；模拟器随 CMPP 后置到验收点 B |
+| 0-d | 从 git 基线 `5edb39d` 导出旧代码作对照物 | git worktree 取历史物 | ✅ `_reference/`（374 Java / 9 模块，已 gitignore） |
 
 **第 1~19 步 · 场景一实现（拉开即最小闭环）**
 

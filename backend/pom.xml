@@ -17,13 +17,27 @@
     <name>cloud-sms-backend</name>
 
     <modules>
-        <!-- 从零重写路线：模块随重写进度逐个加回（R1 common → R2 cache → R3 search → R4 api → R5 strategy
-             → R6 push → R7 smsgateway → R8 monitor → R9 webmaster） -->
+        <!-- 场景驱动：模块随场景需要逐个加回（docs/learning/09 §4.5、learning/08 §5）。
+             阶段一「单发短信跑通到网关」需要以下 5 个模块；其余 4 个（search/push/monitor/webmaster）
+             的目录已存在，等各自场景开工时取消注释。 -->
+        <module>beacon-common</module>
+        <module>beacon-cache</module>
+        <module>beacon-api</module>
+        <module>beacon-strategy</module>
+        <module>beacon-smsgateway</module>
+        <!--
+        <module>beacon-search</module>
+        <module>beacon-push</module>
+        <module>beacon-monitor</module>
+        <module>beacon-webmaster</module>
+        -->
     </modules>
 
     <properties>
+        <!-- JDK 17（AI代码编写规范 §2：本机 JAVA_HOME = jdk-17.0.20.1，release 17 直接编译） -->
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
         <netty.version>4.1.138.Final</netty.version>
