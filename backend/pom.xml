@@ -17,15 +17,14 @@
     <name>cloud-sms-backend</name>
 
     <modules>
-        <!-- 场景驱动：模块随场景需要逐个加回（docs/learning/09 §4.5、learning/08 §5）。
-             阶段一「单发短信跑通到网关」需要以下 5 个模块；其余 4 个（search/push/monitor/webmaster）
-             的目录已存在，等各自场景开工时取消注释。 -->
+        <!-- 模块随场景需要逐个加回：只挂载当前已有代码的模块，未开工的模块不参与构建。
+             已启用：common（底座）、cache（暂仅骨架）、api（受理入口）。 -->
         <module>beacon-common</module>
         <module>beacon-cache</module>
         <module>beacon-api</module>
+        <!--
         <module>beacon-strategy</module>
         <module>beacon-smsgateway</module>
-        <!--
         <module>beacon-search</module>
         <module>beacon-push</module>
         <module>beacon-monitor</module>
@@ -34,7 +33,7 @@
     </modules>
 
     <properties>
-        <!-- JDK 17（AI代码编写规范 §2：本机 JAVA_HOME = jdk-17.0.20.1，release 17 直接编译） -->
+        <!-- JDK 17：本机 JAVA_HOME 指向 Temurin 17，release 17 直接编译 -->
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
