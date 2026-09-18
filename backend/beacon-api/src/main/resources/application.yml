@@ -1,0 +1,57 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: beacon-api
+  # 配置中心接管业务配置：本地只保留引导信息与开发默认值
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-dev.yml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+  # 以下三项在开发环境给默认值，生产由配置中心覆盖
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    # 开启投递确认与不可路由返回，使投递失败可见
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+# 受理校验链及顺序
+filters: apikey,ip,sign
+
+# 内部接口令牌：必填，留空会在启动期直接失败
+internal:
+  sms:
+    token: ${INTERNAL_SMS_TOKEN:dev-internal-token}
+
+# 流水号生成器的机器与服务标识：多实例部署时必须各不相同
+snowflake:
+  machineId: 1
+  serviceId: 1
+
+# 可信反向代理地址：仅当直连方在此清单内时才采信转发头，留空表示完全不采信
+api:
+  trusted-proxies: ""
+
+# 本地客户信息来源：缓存接入前用固定测试数据支撑受理链路
+local:
+  test-client:
+    client-id: 1
+    # IP 校验在名单为空时拒绝请求，因此开发环境显式配置本机回环地址
+    ip-white-list: "127.0.0.1,0:0:0:0:0:0:0:1"
+    sign-id: 1
+    signs: "测试签名"
+
+logging:
+  level:
+    com.cz: info
