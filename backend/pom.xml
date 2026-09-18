@@ -18,12 +18,12 @@
 
     <modules>
         <!-- 模块随场景需要逐个加回：只挂载当前已有代码的模块，未开工的模块不参与构建。
-             已启用：common（底座）、cache（暂仅骨架）、api（受理入口）。 -->
+             已启用：common（底座）、cache（暂仅骨架）、api（受理入口）、strategy（策略与路由）。 -->
         <module>beacon-common</module>
         <module>beacon-cache</module>
         <module>beacon-api</module>
-        <!--
         <module>beacon-strategy</module>
+        <!--
         <module>beacon-smsgateway</module>
         <module>beacon-search</module>
         <module>beacon-push</module>

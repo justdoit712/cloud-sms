@@ -30,4 +30,7 @@ public interface RabbitMQConstants {
 
     /** 日志写入队列：【队列】strategy / smsgateway 生产，search 消费，用于把发送日志写入检索库。 */
     String SMS_WRITE_LOG = "sms_write_log_topic";
+
+    /** 状态回调队列：【队列】strategy / smsgateway 生产，push 消费，用于把结果回调给客户。 */
+    String SMS_PUSH_REPORT = "sms_push_report_topic";
 }
